@@ -46,7 +46,7 @@ Delaunay* Delaunay_DefaultNew( Name name )
 {
 	/* Variables set in this function */
 	SizeT                                              _sizeOfSelf = sizeof( Delaunay );
-	char*                                                      type = Delaunay_Type;
+	const char*                                                      type = Delaunay_Type;
 	/*
     Stg_Class_DeleteFunction*                              _delete = _Delaunay_Delete;
 	Stg_Class_PrintFunction*                                _print = _Delaunay_Print;
@@ -97,7 +97,7 @@ Delaunay* Delaunay_New(
 	Bool                                                  initFlag = True;
 
 */	/* Variables that are set to ZERO are variables that will be set either by the current _New function or another parent _New function further up the hierachy */
-/*	AllocationType  nameAllocationType = NON_GLOBAL */ /* default value NON_GLOBAL */;
+/*	AllocationType  nameAllocationType = NON_GLOBAL */ /* default value NON_GLOBAL *//*;*/
 /*
 	Delaunay *d = _Delaunay_New(  DELAUNAY_PASSARGS  );
 	
@@ -948,7 +948,7 @@ void Delaunay_FindNeighbours( Delaunay *delaunay )
 			edges[i].count++;
 		}
 	}
-	Memory_Free(tempNumNeighbours);
+//	Memory_Free(tempNumNeighbours); //TODO: Free memory
 }
 
 /* Accessor functions below for accessing arrays inside the class */
@@ -995,7 +995,7 @@ int *Delaunay_GetHull( Delaunay *delaunay )
 	return delaunay->hull;
 }
 
-int main(int argc, char *argv)
+int main(int argc, char **argv)
 {
 
 
