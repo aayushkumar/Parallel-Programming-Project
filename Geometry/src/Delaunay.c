@@ -216,7 +216,7 @@ void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, i
     if (initFlag) {
 
 	    if( sites != NULL ){
-		    self->sites = malloc(sizeof(Site) * self->numSites)/*Memory_Alloc_Array_Unnamed( Site, self->numSites );*/   //TODO: Make change
+		    self->sites = (Site *)malloc(sizeof(Site) * self->numSites);/*Memory_Alloc_Array_Unnamed( Site, self->numSites );*/
 		    memset( self->boundingTriangle, 0, sizeof( self->boundingTriangle ) );
 
 		    for( i=0; i<self->numSites; i++ ){
@@ -569,7 +569,7 @@ void Delaunay_FindHull( Delaunay *delaunay )
 	
 	start = le = delaunay->leftMost;
 	
-	delaunay->hull = malloc(sizeof(int)*delaunay->numSites);/*Memory_Alloc_Array_Unnamed( int, delaunay->numSites );*/
+	delaunay->hull = (int *)malloc(sizeof(int)*delaunay->numSites);/*Memory_Alloc_Array_Unnamed( int, delaunay->numSites );*/
 	memset( delaunay->hull, 0, sizeof( int ) * delaunay->numSites );
 	
 	do{
@@ -819,7 +819,7 @@ void Delaunay_FindNeighbours( Delaunay *delaunay )
 		edges[i].count = 0;
 	}
 
-	delaunay->numNeighbours = Memory_Alloc_Array_Unnamed( unsigned int, numSites );
+	delaunay->numNeighbours = (unsigned int *)malloc(sizeof(unsigned int) * numSites);/*Memory_Alloc_Array_Unnamed( unsigned int, numSites );*/
 	memset( delaunay->numNeighbours, 0, sizeof( unsigned int ) * numSites );
 	numNeighbours = delaunay->numNeighbours;
 	
@@ -852,23 +852,23 @@ void Delaunay_FindNeighbours( Delaunay *delaunay )
 
 	/* allocating memory */
 	if( attr->CalculateVoronoiSurfaceArea ){
-		delaunay->voronoiArea = Memory_Alloc_Array_Unnamed( float, numSites );
+		delaunay->voronoiArea = (float *)malloc(sizeof(float) * numSites); /*Memory_Alloc_Array_Unnamed( float, numSites );*/
 		memset( delaunay->voronoiArea, 0, sizeof( float ) * numSites );
 	}
 	
 	if( attr->FindNeighbours ){
-		delaunay->neighbours = Memory_Alloc_Array_Unnamed( unsigned int*, numSites );
-		delaunay->neighbours[0] = Memory_Alloc_Array_Unnamed( unsigned int, numNeighboursSum );
+		delaunay->neighbours = (unsigned int **)malloc(sizeof(unsigned int *) * numSites); /*Memory_Alloc_Array_Unnamed( unsigned int*, numSites );*/
+		delaunay->neighbours[0] = (unsigned int*) malloc(sizeof(unsigned int) * numNeighboursSum); /*Memory_Alloc_Array_Unnamed( unsigned int, numNeighboursSum );*/
 		memset( delaunay->neighbours[0], 0, sizeof( unsigned int ) * numNeighboursSum );
 	}
 	
 	if( attr->CalculateVoronoiSides ){
-		delaunay->voronoiSides = Memory_Alloc_Array_Unnamed( float*, numSites );
-		delaunay->voronoiSides[0] = Memory_Alloc_Array_Unnamed( float, numNeighboursSum );
+		delaunay->voronoiSides = (float **) malloc(sizeof(float *) * numSites); /*Memory_Alloc_Array_Unnamed( float*, numSites );*/
+		delaunay->voronoiSides[0] = (float *) malloc(sizeof (float) * numNeighboursSum); /*Memory_Alloc_Array_Unnamed( float, numNeighboursSum );*/
 		memset( delaunay->voronoiSides[0], 0, sizeof( float ) * numNeighboursSum );
 	}
 
-	tempNumNeighbours = Memory_Alloc_Array_Unnamed( int, numSites );
+	tempNumNeighbours = (int *) malloc(sizeof(int) * numSites);/*Memory_Alloc_Array_Unnamed( int, numSites );*/
 	memcpy( tempNumNeighbours, numNeighbours, sizeof( int ) * numSites );
 
 	
