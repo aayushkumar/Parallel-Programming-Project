@@ -19,7 +19,6 @@
 /*#include "StGermain/StGermain.h"*/
 
 #include "MemoryPool.h"
-#include "Dictionary.h"
 #include "units.h"
 #include "types.h"
 #include "QuadEdge.h"
@@ -60,7 +59,7 @@ Delaunay* Delaunay_DefaultNew( Name name )
 	Stg_Component_DestroyFunction*                        _destroy = _Delaunay_Destroy;
     */
 	Bool                                                  initFlag = False;
-	Dictionary*                                         dictionary = NULL;
+	/*Dictionary*                                         dictionary = NULL;*/
 	CoordF*                                                  sites = NULL;	/* Same as float[3]* */
 	int                                                   numSites = 0;
 	int                                                   idOffset = 0;
@@ -187,7 +186,7 @@ void Delaunay_FindMinMax( Site *sites, int count, float *minX, float *minY, floa
 	}
 }
 
-void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, int numSites, int idOffset, Dictionary* dictionary, Bool initFlag  )
+void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, int numSites, int idOffset, /*Dictionary* dictionary,*/ Bool initFlag  )
 {
 	float maxX, minX, maxY, minY;
 	float centreX, centreY;

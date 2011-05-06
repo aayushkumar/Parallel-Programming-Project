@@ -36,7 +36,7 @@
 	#define __Delaunay \
 		/*__Stg_Component */\
 		/*AbstractContext*		context; */\
-		Dictionary			*dictionary; \
+		/*Dictionary			*dictionary; */\
 		MemoryPool			*qp; \
 		MemoryPool			*vp; \
 		int					numSites; \
@@ -72,7 +72,7 @@
 	
 	Delaunay* Delaunay_New(
 		Name						name,
-		Dictionary*					dictionary,
+		/*Dictionary*					dictionary,*/
 		CoordF						*sites,
 		int							numSites,
 		int							idOffset,
@@ -82,7 +82,7 @@
 	void Delaunay_Init(
 		Delaunay*					self,
 		Name						name,
-		Dictionary*					dictionary,
+		/*Dictionary*					dictionary,*/
 		CoordF						*sites,
 		int							numSites,
 		int							idOffset,
@@ -97,7 +97,7 @@
 	#define DELAUNAY_DEFARGS \
                 /*STG_COMPONENT_DEFARGS, */\
                 Bool                   initFlag, \
-                Dictionary*          dictionary, \
+                /*Dictionary*          dictionary,*/ \
                 CoordF*                   sites, \
                 int                    numSites, \
                 int                    idOffset, \
@@ -115,7 +115,7 @@
 	Delaunay* _Delaunay_New(  DELAUNAY_DEFARGS  );
 	
     //void _Delaunay_Init( Delaunay* self );
-    void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, int numSites, int idOffset, Dictionary* dictionary, Bool initFlag );
+    void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, int numSites, int idOffset, /*Dictionary* dictionary, */Bool initFlag );
 	
 	
 	/*--------------------------------------------------------------------------------------------------------------------------
