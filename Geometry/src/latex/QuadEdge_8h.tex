@@ -1,0 +1,272 @@
+\hypertarget{QuadEdge_8h}{
+\section{QuadEdge.h File Reference}
+\label{QuadEdge_8h}\index{QuadEdge.h@{QuadEdge.h}}
+}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structVoronoiVertex__t}{VoronoiVertex\_\-t}
+\item 
+struct \hyperlink{structQuadEdge}{QuadEdge}
+\end{DoxyCompactItemize}
+\subsection*{Defines}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{QuadEdge_8h_ae17a3a2e3545f97a4575a5584d84558e}{
+\#define {\bfseries IN\_\-USE}~1}
+\label{QuadEdge_8h_ae17a3a2e3545f97a4575a5584d84558e}
+
+\item 
+\#define \hyperlink{QuadEdge_8h_aaa14fef5f01b047f318acbd046514cea}{\_\-\_\-QuadEdge}
+\item 
+\hypertarget{QuadEdge_8h_a4cfc63e05db4883dc4b60a1245a9ffc5}{
+\#define {\bfseries WORD}~0xfffffffcu}
+\label{QuadEdge_8h_a4cfc63e05db4883dc4b60a1245a9ffc5}
+
+\item 
+\hypertarget{QuadEdge_8h_ab9b4902200bc3925c552366930253e10}{
+\#define {\bfseries COUNT}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$count}
+\label{QuadEdge_8h_ab9b4902200bc3925c552366930253e10}
+
+\item 
+\hypertarget{QuadEdge_8h_a3a5c0d11094d164de1ae622e4e42cd66}{
+\#define {\bfseries IS\_\-IN\_\-USE}(e)~(((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$attributes \& IN\_\-USE)}
+\label{QuadEdge_8h_a3a5c0d11094d164de1ae622e4e42cd66}
+
+\item 
+\hypertarget{QuadEdge_8h_a10540878090dad9b55f6a93a82aa2756}{
+\#define {\bfseries IS\_\-FREE}(e)~(!(((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$attributes \& IN\_\-USE))}
+\label{QuadEdge_8h_a10540878090dad9b55f6a93a82aa2756}
+
+\item 
+\hypertarget{QuadEdge_8h_adb17ea76cb5859cbed5a75621656a70d}{
+\#define {\bfseries SET\_\-IN\_\-USE}(e)~(((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$attributes $|$= IN\_\-USE)}
+\label{QuadEdge_8h_adb17ea76cb5859cbed5a75621656a70d}
+
+\item 
+\hypertarget{QuadEdge_8h_add5da3111c3dfd860b8d4b80079d1691}{
+\#define {\bfseries SET\_\-FREE}(e)~(((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$attributes \&= $\sim$IN\_\-USE)}
+\label{QuadEdge_8h_add5da3111c3dfd860b8d4b80079d1691}
+
+\item 
+\hypertarget{QuadEdge_8h_ada2e458f36b943499583b0c2d14b5672}{
+\#define {\bfseries ROT}(e)~(((e)\&WORD)+(((e)+1)\&3u))}
+\label{QuadEdge_8h_ada2e458f36b943499583b0c2d14b5672}
+
+\item 
+\hypertarget{QuadEdge_8h_a3cfca2602448f893333cc4c8e5b77f84}{
+\#define {\bfseries SYM}(e)~(((e)\&WORD)+(((e)+2)\&3u))}
+\label{QuadEdge_8h_a3cfca2602448f893333cc4c8e5b77f84}
+
+\item 
+\hypertarget{QuadEdge_8h_a30a9b350971961838f706214a3ee43b3}{
+\#define {\bfseries TOR}(e)~(((e)\&WORD)+(((e)+3)\&3u))}
+\label{QuadEdge_8h_a30a9b350971961838f706214a3ee43b3}
+
+\item 
+\hypertarget{QuadEdge_8h_a1db999fe053bca588bc96ff203f76ddd}{
+\#define {\bfseries ONEXT}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$next\mbox{[}(e)\&3\mbox{]}}
+\label{QuadEdge_8h_a1db999fe053bca588bc96ff203f76ddd}
+
+\item 
+\hypertarget{QuadEdge_8h_a51cfc4852225ecaa281add583ab67c7b}{
+\#define {\bfseries ROTRNEXT}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$next\mbox{[}((e)+1)\&3\mbox{]}}
+\label{QuadEdge_8h_a51cfc4852225ecaa281add583ab67c7b}
+
+\item 
+\hypertarget{QuadEdge_8h_a3437ec69c261bb40c2d6c764e1c5b497}{
+\#define {\bfseries SYMDNEXT}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$next\mbox{[}((e)+2)\&3\mbox{]}}
+\label{QuadEdge_8h_a3437ec69c261bb40c2d6c764e1c5b497}
+
+\item 
+\hypertarget{QuadEdge_8h_a74b50a8d01ebdf569cad27df9c2b79de}{
+\#define {\bfseries TORLNEXT}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$next\mbox{[}((e)+3)\&3\mbox{]}}
+\label{QuadEdge_8h_a74b50a8d01ebdf569cad27df9c2b79de}
+
+\item 
+\hypertarget{QuadEdge_8h_a66731671747c6ff5abc1587f8e6a61bf}{
+\#define {\bfseries RNEXT}(e)~(TOR(ROTRNEXT(e)))}
+\label{QuadEdge_8h_a66731671747c6ff5abc1587f8e6a61bf}
+
+\item 
+\hypertarget{QuadEdge_8h_a986075d1fe6cddc2182532612e739451}{
+\#define {\bfseries DNEXT}(e)~(SYM(SYMDNEXT(e)))}
+\label{QuadEdge_8h_a986075d1fe6cddc2182532612e739451}
+
+\item 
+\hypertarget{QuadEdge_8h_a900fa4f3e7e99754ab3f7901b10c3af7}{
+\#define {\bfseries LNEXT}(e)~(ROT(TORLNEXT(e)))}
+\label{QuadEdge_8h_a900fa4f3e7e99754ab3f7901b10c3af7}
+
+\item 
+\hypertarget{QuadEdge_8h_aafe13dcefb08b600d0d66e06ac0d9e54}{
+\#define {\bfseries OPREV}(e)~(ROT(ROTRNEXT(e)))}
+\label{QuadEdge_8h_aafe13dcefb08b600d0d66e06ac0d9e54}
+
+\item 
+\hypertarget{QuadEdge_8h_aaa5181f47f6ba17363fb9e51ace54258}{
+\#define {\bfseries DPREV}(e)~(TOR(TORLNEXT(e)))}
+\label{QuadEdge_8h_aaa5181f47f6ba17363fb9e51ace54258}
+
+\item 
+\hypertarget{QuadEdge_8h_a8911b23ca8d550746285817446da1ece}{
+\#define {\bfseries RPREV}(e)~(SYMDNEXT(e))}
+\label{QuadEdge_8h_a8911b23ca8d550746285817446da1ece}
+
+\item 
+\hypertarget{QuadEdge_8h_addf122a45a22166e7b76aba68d1f320f}{
+\#define {\bfseries LPREV}(e)~(SYM(ONEXT(e)))}
+\label{QuadEdge_8h_addf122a45a22166e7b76aba68d1f320f}
+
+\item 
+\hypertarget{QuadEdge_8h_a1ac7304e047e99ec06a8e66cbe22bd1a}{
+\#define {\bfseries ODATA}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$data\mbox{[}(e)\&3\mbox{]}}
+\label{QuadEdge_8h_a1ac7304e047e99ec06a8e66cbe22bd1a}
+
+\item 
+\hypertarget{QuadEdge_8h_ab70599bfead7b13541493b8cce48ffc3}{
+\#define {\bfseries RDATA}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$data\mbox{[}((e)+1)\&3\mbox{]}}
+\label{QuadEdge_8h_ab70599bfead7b13541493b8cce48ffc3}
+
+\item 
+\hypertarget{QuadEdge_8h_af54f7431c554a3e4eb097bc729c30d4c}{
+\#define {\bfseries DDATA}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$data\mbox{[}((e)+2)\&3\mbox{]}}
+\label{QuadEdge_8h_af54f7431c554a3e4eb097bc729c30d4c}
+
+\item 
+\hypertarget{QuadEdge_8h_ac053a2ad60308e422a6a04cd56f0c3ed}{
+\#define {\bfseries LDATA}(e)~((\hyperlink{structQuadEdge}{QuadEdge} $\ast$)((e)\&WORD))-\/$>$data\mbox{[}((e)+3)\&3\mbox{]}}
+\label{QuadEdge_8h_ac053a2ad60308e422a6a04cd56f0c3ed}
+
+\item 
+\hypertarget{QuadEdge_8h_a470588c904040b7b5c5d6d03862f1042}{
+\#define {\bfseries ORG}(e)~ODATA(e)}
+\label{QuadEdge_8h_a470588c904040b7b5c5d6d03862f1042}
+
+\item 
+\hypertarget{QuadEdge_8h_a3c84ce3a39b87b98010791feaee24ef8}{
+\#define {\bfseries DEST}(e)~DDATA(e)}
+\label{QuadEdge_8h_a3c84ce3a39b87b98010791feaee24ef8}
+
+\item 
+\hypertarget{QuadEdge_8h_af337ec635c2e368a280b73dcd4dcfa09}{
+\#define {\bfseries VORG}(e)~RDATA(e)}
+\label{QuadEdge_8h_af337ec635c2e368a280b73dcd4dcfa09}
+
+\item 
+\hypertarget{QuadEdge_8h_a49b2521204199220a8f2050c3319fc56}{
+\#define {\bfseries VDEST}(e)~LDATA(e)}
+\label{QuadEdge_8h_a49b2521204199220a8f2050c3319fc56}
+
+\item 
+\hypertarget{QuadEdge_8h_a23a168d657c4a67c55b2d732ce260ef8}{
+\#define {\bfseries FABS}(a)~((a) $>$= 0.0 ? (a) : -\/(a))}
+\label{QuadEdge_8h_a23a168d657c4a67c55b2d732ce260ef8}
+
+\item 
+\#define {\bfseries CCW}(a, b, c, result)
+\item 
+\#define {\bfseries CROSS\_\-PROD}(result, a, b)
+\item 
+\hypertarget{QuadEdge_8h_ad99f832b02db317792a025da5e581cd8}{
+\#define {\bfseries CIRCUM\_\-CIRCLE}(a, b, c, result)}
+\label{QuadEdge_8h_ad99f832b02db317792a025da5e581cd8}
+
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{QuadEdge_8h_a1fcf1e87908d0d98f40aa862d3e0a6ad}{
+typedef struct \hyperlink{structVoronoiVertex__t}{VoronoiVertex\_\-t} {\bfseries VoronoiVertex}}
+\label{QuadEdge_8h_a1fcf1e87908d0d98f40aa862d3e0a6ad}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{QuadEdge_8h_a30575367c2b7e0940936516558c75f90}{
+QuadEdgeRef {\bfseries MakeQuadEdge} (MemoryPool $\ast$qp)}
+\label{QuadEdge_8h_a30575367c2b7e0940936516558c75f90}
+
+\item 
+\hypertarget{QuadEdge_8h_a147bd769a6a0bac4bc650d431a235b5c}{
+void {\bfseries DeleteQuadEdge} (MemoryPool $\ast$qp, QuadEdgeRef e)}
+\label{QuadEdge_8h_a147bd769a6a0bac4bc650d431a235b5c}
+
+\item 
+\hypertarget{QuadEdge_8h_af210dd4a8c3b35c41e9176d3e15820c3}{
+void {\bfseries SpliceQuadEdges} (QuadEdgeRef a, QuadEdgeRef b)}
+\label{QuadEdge_8h_af210dd4a8c3b35c41e9176d3e15820c3}
+
+\item 
+\hypertarget{QuadEdge_8h_aed9cd0145392fbf078d6e27d2f9a9b58}{
+QuadEdgeRef {\bfseries ConnectQuadEdges} (MemoryPool $\ast$qp, QuadEdgeRef a, QuadEdgeRef b)}
+\label{QuadEdge_8h_aed9cd0145392fbf078d6e27d2f9a9b58}
+
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+const Type \hyperlink{QuadEdge_8h_a72b366ee53573c3aafcdd9457e41a9ae}{QuadEdge\_\-Type}
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Role:
+
+Assumptions:
+
+Comments:
+
+$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$$\sim$ 
+
+\subsection{Define Documentation}
+\hypertarget{QuadEdge_8h_aaa14fef5f01b047f318acbd046514cea}{
+\index{QuadEdge.h@{QuadEdge.h}!\_\-\_\-QuadEdge@{\_\-\_\-QuadEdge}}
+\index{\_\-\_\-QuadEdge@{\_\-\_\-QuadEdge}!QuadEdge.h@{QuadEdge.h}}
+\subsubsection[{\_\-\_\-QuadEdge}]{\setlength{\rightskip}{0pt plus 5cm}\#define \_\-\_\-QuadEdge}}
+\label{QuadEdge_8h_aaa14fef5f01b047f318acbd046514cea}
+{\bfseries Value:}
+\begin{DoxyCode}
+QuadEdgeRef     next[4];\
+                void                    *data[4];\
+                unsigned                count;\
+                unsigned                attributes;
+\end{DoxyCode}
+\hyperlink{structQuadEdge}{QuadEdge} class contents (see \hyperlink{structQuadEdge}{QuadEdge}) \hypertarget{QuadEdge_8h_a1a343814aba2e9dd30b5ded11a5a592f}{
+\index{QuadEdge.h@{QuadEdge.h}!CCW@{CCW}}
+\index{CCW@{CCW}!QuadEdge.h@{QuadEdge.h}}
+\subsubsection[{CCW}]{\setlength{\rightskip}{0pt plus 5cm}\#define CCW(a, \/  b, \/  c, \/  result)}}
+\label{QuadEdge_8h_a1a343814aba2e9dd30b5ded11a5a592f}
+{\bfseries Value:}
+\begin{DoxyCode}
+do{\
+                double ax=0, ay=0, bx=0, by=0, cx=0, cy=0; \
+                ax = (*(a))[0]; ay = (*(a))[1];\
+                bx = (*(b))[0]; by = (*(b))[1];\
+                cx = (*(c))[0]; cy = (*(c))[1];\
+                *(result) = ((bx*cy-by*cx) - (ax*cy-ay*cx) + (ax*by-ay*bx));\
+        }while(0)
+\end{DoxyCode}
+\hypertarget{QuadEdge_8h_ab1397fecb5fcfc2b11a3c1b2cc17046c}{
+\index{QuadEdge.h@{QuadEdge.h}!CROSS\_\-PROD@{CROSS\_\-PROD}}
+\index{CROSS\_\-PROD@{CROSS\_\-PROD}!QuadEdge.h@{QuadEdge.h}}
+\subsubsection[{CROSS\_\-PROD}]{\setlength{\rightskip}{0pt plus 5cm}\#define CROSS\_\-PROD(result, \/  a, \/  b)}}
+\label{QuadEdge_8h_ab1397fecb5fcfc2b11a3c1b2cc17046c}
+{\bfseries Value:}
+\begin{DoxyCode}
+do{\
+                result[0]=a[1]*b[2] - b[1]*a[2];\
+                result[1]=-1.0f*(a[0]*b[2] - b[0]*a[2]);\
+                result[2]=a[0]*b[1] - b[0]*a[1];\
+        }while(0)
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\hypertarget{QuadEdge_8h_a72b366ee53573c3aafcdd9457e41a9ae}{
+\index{QuadEdge.h@{QuadEdge.h}!QuadEdge\_\-Type@{QuadEdge\_\-Type}}
+\index{QuadEdge\_\-Type@{QuadEdge\_\-Type}!QuadEdge.h@{QuadEdge.h}}
+\subsubsection[{QuadEdge\_\-Type}]{\setlength{\rightskip}{0pt plus 5cm}const Type {\bf QuadEdge\_\-Type}}}
+\label{QuadEdge_8h_a72b366ee53573c3aafcdd9457e41a9ae}
+Textual name of this class 
