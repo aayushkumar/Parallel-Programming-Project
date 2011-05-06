@@ -32,7 +32,7 @@
 #include <math.h>
 #include <limits.h>
 
-const Type Delaunay_Type="Delaunay";
+const char* Delaunay_Type="Delaunay";
 
 #if !defined INFINITY
 	#define INFINITY LONG_MAX
@@ -47,7 +47,7 @@ Delaunay* Delaunay_DefaultNew( Name name )
 {
 	/* Variables set in this function */
 	SizeT                                              _sizeOfSelf = sizeof( Delaunay );
-	Type                                                      type = Delaunay_Type;
+	char*                                                      type = Delaunay_Type;
 	/*
     Stg_Class_DeleteFunction*                              _delete = _Delaunay_Delete;
 	Stg_Class_PrintFunction*                                _print = _Delaunay_Print;
@@ -141,11 +141,11 @@ void Delaunay_Init(
 Delaunay* _Delaunay_New(  DELAUNAY_DEFARGS  ) {
 	Delaunay *self = NULL;
 	
-	assert( _sizeOfSelf >= sizeof(Delaunay) );
+	//assert(self->_sizeOfSelf >= sizeof(Delaunay) );
 	/* The following terms are parameters that have been passed into this function but are being set before being passed onto the parent */
 	/* This means that any values of these parameters that are passed into this function are not passed onto the parent function
 	   and so should be set to ZERO in any children of this class. */
-	nameAllocationType = NON_GLOBAL;
+	//nameAllocationType = NON_GLOBAL;
 
 	self = (Delaunay*) malloc(sizeof(self));/*_Stg_Component_New(  STG_COMPONENT_PASSARGS  );*/      
     if (!self)

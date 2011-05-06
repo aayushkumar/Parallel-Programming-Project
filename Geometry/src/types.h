@@ -14,7 +14,8 @@
 #ifndef __StgDomain_Geometry_types_h__
 #define __StgDomain_Geometry_types_h__
 
-    typedef enum Bool { False=0, True=1 } Bool;	
+    typedef enum Bool { False=0, True=1 } Bool;
+    typedef enum AllocationType { GLOBAL, NON_GLOBAL}AllocationType;	
     typedef unsigned int Index;
 	typedef Index		NeighbourIndex;
 
