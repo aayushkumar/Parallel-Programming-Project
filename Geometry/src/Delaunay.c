@@ -152,7 +152,7 @@ Delaunay* _Delaunay_New(  DELAUNAY_DEFARGS  ) {
            printf("NO MEMORY\n");
            exit(0);
        }
-	_Delaunay_Init( self, sites, attr, numSites, idOffset, dictionary, initFlag );
+	_Delaunay_Init( self, sites, attr, numSites, idOffset, /*dictionary,*/ initFlag );
 
 	return self;
 }
@@ -196,7 +196,7 @@ void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, i
 	
 	assert( self );
 	
-	self->dictionary = dictionary;
+	/*self->dictionary = dictionary;*/
 	self->points = points;
 	self->attributes = attr;
 	self->idOffset = idOffset;
@@ -216,7 +216,7 @@ void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, i
     if (initFlag) {
 
 	    if( sites != NULL ){
-		    self->sites = malloc()/*Memory_Alloc_Array_Unnamed( Site, self->numSites );*/   //TODO: Make change
+		    self->sites = malloc(sizeof(Site) * self->numSites)/*Memory_Alloc_Array_Unnamed( Site, self->numSites );*/   //TODO: Make change
 		    memset( self->boundingTriangle, 0, sizeof( self->boundingTriangle ) );
 
 		    for( i=0; i<self->numSites; i++ ){
@@ -266,8 +266,8 @@ void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, i
 */
 
 /** Stg_Class_Print() implementation */
-void _Delaunay_Print( void* delaunay, Stream* stream )
 /*
+void _Delaunay_Print( void* delaunay, Stream* stream )
 {
 	Delaunay *self = ( Delaunay* )delaunay;
 	
@@ -327,8 +327,7 @@ void _Delaunay_Build( void* delaunay, void* data )
     
 	assert( self );
 	
-	self->qp = MemoryPool_New( QuadEdge, self->numSites * 3, 10 );  //TODO: Include relevant files
-	
+	self->qp = MemoryPool_New( QuadEdge, self->numSites * 3, 10 );  	
 	Delaunay_SortSites(self->sites, self->numSites);
 
     Delaunay_Recurse(self, 0, self->numSites, &self->leftMost, &self->rightMost);
@@ -570,7 +569,7 @@ void Delaunay_FindHull( Delaunay *delaunay )
 	
 	start = le = delaunay->leftMost;
 	
-	delaunay->hull = Memory_Alloc_Array_Unnamed( int, delaunay->numSites ); //TODO: Prob same as before
+	delaunay->hull = malloc(sizeof(int)*delaunay->numSites);/*Memory_Alloc_Array_Unnamed( int, delaunay->numSites );*/
 	memset( delaunay->hull, 0, sizeof( int ) * delaunay->numSites );
 	
 	do{

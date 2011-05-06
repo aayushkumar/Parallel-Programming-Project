@@ -106,7 +106,7 @@
 	#define DELAUNAY_PASSARGS \
             /*    STG_COMPONENT_PASSARGS, */\
 	        initFlag,   \
-	        dictionary, \
+	        /*dictionary, */\
 	        sites,      \
 	        numSites,   \
 	        idOffset,   \
