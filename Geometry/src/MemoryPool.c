@@ -1,6 +1,9 @@
+/*
 #include <Base/Foundation/Foundation.h>
 #include <Base/IO/IO.h>
+*/
 
+#include "units.h"
 #include "types.h"
 #include "MemoryPool.h"
 
@@ -9,7 +12,7 @@
 #include <assert.h>
 #include <string.h>
 
-const Type MemoryPool_Type = "MemoryPool";
+const char* /*Type */MemoryPool_Type = "MemoryPool";
 
 /*----------------------------------------------------------------------------------------------------------------------------------
 ** Constructors
@@ -40,7 +43,7 @@ MemoryPool* MemoryPool_NewFunc( SizeT elementSize, int numElements, int delta )
 {
 	/* Variables set in this function */
 	SizeT                      _sizeOfSelf = sizeof(MemoryPool);
-	Type                              type = MemoryPool_Type;
+	/*Type*/ const char*                              type = MemoryPool_Type;
 /*	Stg_Class_DeleteFunction*      _delete = _MemoryPool_DeleteFunc;
 	Stg_Class_PrintFunction*        _print = _MemoryPool_PrintFunc;
 	Stg_Class_CopyFunction*          _copy = NULL;
@@ -61,7 +64,7 @@ void _MemoryPool_Init( MemoryPool* self ){
 	/* General info */
 	
 	assert( self );
-	_Stg_Class_Init ((Stg_Class*) self);
+	/* _Stg_Class_Init ((Stg_Class*) self); */
 	
 	assert( self->numMemChunks == 1 );
 

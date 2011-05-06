@@ -997,7 +997,6 @@ int *Delaunay_GetHull( Delaunay *delaunay )
 
 int main(int argc, char **argv)
 {
-
-
+    printf("Hello, World!");
     return 1;
 }
