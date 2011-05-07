@@ -1,32 +1,3 @@
-/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-**
-** Copyright (C), 2003, Victorian Partnership for Advanced Computing (VPAC) Ltd, 110 Victoria Street, Melbourne, 3053, Australia.
-**
-** Authors:
-**	Stevan M. Quenette, Senior Software Engineer, VPAC. (steve@vpac.org)
-**	Patrick D. Sunter, Software Engineer, VPAC. (pds@vpac.org)
-**	Luke J. Hodkinson, Computational Engineer, VPAC. (lhodkins@vpac.org)
-**	Siew-Ching Tan, Software Engineer, VPAC. (siew@vpac.org)
-**	Alan H. Lo, Computational Engineer, VPAC. (alan@vpac.org)
-**	Raquibul Hassan, Computational Engineer, VPAC. (raq@vpac.org)
-**
-**  This library is free software; you can redistribute it and/or
-**  modify it under the terms of the GNU Lesser General Public
-**  License as published by the Free Software Foundation; either
-**  version 2.1 of the License, or (at your option) any later version.
-**
-**  This library is distributed in the hope that it will be useful,
-**  but WITHOUT ANY WARRANTY; without even the implied warranty of
-**  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-**  Lesser General Public License for more details.
-**
-**  You should have received a copy of the GNU Lesser General Public
-**  License along with this library; if not, write to the Free Software
-**  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
-**
-**
-**~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-
 #include <Base/Foundation/Foundation.h>
 #include <Base/IO/IO.h>
 
@@ -48,7 +19,9 @@ LinkedList* _LinkedList_New(  LINKEDLIST_DEFARGS  )
 {
 	LinkedList *self = NULL;
 
-	self = (LinkedList*)_Stg_Class_New(  STG_CLASS_PASSARGS  );
+	self = (LinkedList*) malloc(sizeof(LinkedList));/*_Stg_Class_New(  STG_CLASS_PASSARGS  )*/;
+    /*Custom Added based on Stg_Class_New*/
+    memset(self, 0, sizeof(LinkedList));
 	return self;
 }
 
@@ -61,7 +34,7 @@ LinkedList* LinkedList_New(
 {
 	/* Variables set in this function */
 	SizeT                      _sizeOfSelf = sizeof(LinkedList);
-	Type                              type = LinkedList_Type;
+	char * /*Type*/                              type = LinkedList_Type;
 	Stg_Class_DeleteFunction*      _delete = _LinkedList_DeleteFunc;
 	Stg_Class_PrintFunction*        _print = _LinkedList_PrintFunc;
 	Stg_Class_CopyFunction*          _copy = NULL;
@@ -90,7 +63,7 @@ void _LinkedList_Init( LinkedList* self ){
 	/* General info */
 	
 	assert( self );
-	_Stg_Class_Init ((Stg_Class*) self);
+	/*_Stg_Class_Init ((Stg_Class*) self);*/
 	
 	self->head = NULL;
 	self->nodeCount = 0;
@@ -106,7 +79,7 @@ void LinkedList_Init( LinkedList *self )
 /*----------------------------------------------------------------------------------------------------------------------------------
 ** Virtual Functions
 */
-void _LinkedList_PrintFunc ( void *list, Stream *stream )
+/*void _LinkedList_PrintFunc ( void *list, Stream *stream )
 {
 	LinkedList *self = NULL;
 	
@@ -114,23 +87,23 @@ void _LinkedList_PrintFunc ( void *list, Stream *stream )
 	assert( self );
 	assert( stream );
 
-	/* print parent */
-	_Stg_Class_Print( (void*) self, stream );
+*/	/* print parent */
+/*	_Stg_Class_Print( (void*) self, stream );
 
-	/* general info */
-	Journal_Printf( stream, "LinkedList (ptr): (%p)\n", self );
+*/	/* general info */
+/*	Journal_Printf( stream, "LinkedList (ptr): (%p)\n", self );
 
-	/* Virtual Info */
+*/	/* Virtual Info */
 
 	/* LinkedList Info */
-	Journal_Printf( stream, "\tNodeCount\t\t - %d\n", self->nodeCount );
+/*	Journal_Printf( stream, "\tNodeCount\t\t - %d\n", self->nodeCount );
 	Journal_Printf( stream, "\tLinkedList Order\t - %s\n", (self->listOrder == LINKEDLIST_SORTED)?"SORTED":"UNSORTED" );
 	
 	Journal_Printf( stream, "\tLinkedList data\t - \n");
 	if (self->dataPrintFunction)
 		LinkedList_ParseList( self, (LinkedList_parseFunction*)self->dataPrintFunction, (void*)stream );
 }
-
+*/
 int LinkedList_DeleteAllNodes( LinkedList *list )
 {
 	LinkedList *self = NULL;
@@ -168,7 +141,7 @@ void _LinkedList_DeleteFunc( void *list )
 	
 	LinkedList_DeleteAllNodes( self );
 	
-	_Stg_Class_Delete( self );
+	/*_Stg_Class_Delete( self );*/  //TODO: Make sure memory is freed
 }
 
 /*----------------------------------------------------------------------------------------------------------------------------------
@@ -306,7 +279,7 @@ char* LinkedList_ReturnArrayFunc( LinkedList *list, SizeT dataSize )
 
 	assert( list );
 	
-	array = Memory_Alloc_Array_Unnamed(char, list->nodeCount * dataSize );
+	array = (char *) malloc(sizeof(char) * list->nodeCount * dataSize);/*Memory_Alloc_Array_Unnamed(char, list->nodeCount * dataSize );*/
 	assert( array );
 	
 	curr = list->head;
