@@ -147,12 +147,11 @@ Delaunay* _Delaunay_New(  DELAUNAY_DEFARGS  ) {
 	   and so should be set to ZERO in any children of this class. */
 	//nameAllocationType = NON_GLOBAL;
 
-	self = (Delaunay*) malloc(sizeof(self));/*_Stg_Component_New(  STG_COMPONENT_PASSARGS  );*/      
-    	if (!self)
-        {
-           printf("NO MEMORY\n");
-           exit(0);
-        }
+	self = (Delaunay*) malloc(sizeof(Delaunay));/*_Stg_Component_New(  STG_COMPONENT_PASSARGS  );*/      
+    if (!self) {
+        printf("NO MEMORY\n");
+        exit(0);
+    }
 	_Delaunay_Init( self, sites, attr, numSites, idOffset, /*dictionary,*/ initFlag );
 
 	return self;
@@ -196,6 +195,7 @@ void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, i
 	CoordF *sites = NULL;
 	
 	assert( self );
+    
 	
 	/*self->dictionary = dictionary;*/
 	self->points = points;
@@ -211,11 +211,9 @@ void _Delaunay_Init( Delaunay* self, CoordF* points, DelaunayAttributes* attr, i
 	
 	self->numInputSites = numSites;
 
-
 	sites = self->points;
 	
     if (initFlag) {
-
 	    if( sites != NULL ){
 		    self->sites = (Site *)malloc(sizeof(Site) * self->numSites);/*Memory_Alloc_Array_Unnamed( Site, self->numSites );*/
 		    memset( self->boundingTriangle, 0, sizeof( self->boundingTriangle ) );
