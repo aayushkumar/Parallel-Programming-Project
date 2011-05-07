@@ -338,6 +338,7 @@ void _Delaunay_Build( void* delaunay, void* data )
 	attr = self->attributes;
 
 	if( attr->CreateVoronoiVertices ){
+        printf("Going to create voronoi vertices\n");
 		self->vp = MemoryPool_New( VoronoiVertex, self->numSites * 2, 10 );
 	}
 	
@@ -736,7 +737,7 @@ void Delaunay_BuildVoronoiVertices( Delaunay *delaunay )
 	QuadEdge *edges = NULL;
 	Site *sites = NULL;
 	int maxEdges = 0;
-
+    
 	assert( delaunay );
 	
 	edges = (QuadEdge*)delaunay->qp->chunks[0].memory;
@@ -1015,25 +1016,59 @@ void GeneratePoints( CoordF* sites, int numSites ) {
    attr->BuildTriangleNeighbours=0;
    attr->CreateVoronoiVertices=1;
    attr->CalculateVoronoiSides=1;
-   attr->CalculateVoronoiSurfaceArea=0;
-   attr->FindNeighbours=0;
+   attr->CalculateVoronoiSurfaceArea=1;
+   attr->FindNeighbours=1;
 
    printf("done\n");
 
-   for( i = 0; i < num; i++ ) 
+   /*   for( i = 0; i < num; i++ ) 
    {
       sites[i][0] = drand48();
       sites[i][1] = drand48();
    }
+   */
+   sites[0][0] = 0;
+   sites[0][1] = 0;
+   
+   sites[1][0] = 1;
+   sites[1][1] = 2;
+
+   sites[2][0] = 2;
+   sites[2][1] = 1;
+
+   sites[3][0] = 3;
+   sites[3][1] = 2;
+
+   sites[4][0] = 4;
+   sites[4][1] = 0;
+
+   sites[5][0] = 5;
+   sites[5][1] = 1;
 
    printf("sites over\n");
    delaunay = Delaunay_New( "Delaunay-Regular", /*data->dict,*/ sites, numSites, 0, attr );
+   _Delaunay_Build(delaunay, NULL);
 
+    printf("\tNum Sites %d\n", delaunay->numSites );
+    printf("\tNum Edges %d\n", delaunay->numEdges );
+    printf("\tNum Triangles %d\n", delaunay->numTriangles );
+	printf("\tNum Voronoi Vertices %d\n", delaunay->numVoronoiVertices );
+
+    for (i=0; i<delaunay->numSites; i++)
+    {
+
+        printf("Voronoi Side is for site[%d] is: ", i);
+        for (j=0; j<6; j++)
+        {
+                 printf("%f ", delaunay->voronoiSides[i][j]);
+        }
+        printf("\n");
+    }
 }
 
 int main(int argc, char **argv)
 {
-    int numSites = 5;
+    int numSites = 6;
     CoordF* sites;
     printf("generating points1 %d \n", numSites);
     GeneratePoints(sites,numSites);
