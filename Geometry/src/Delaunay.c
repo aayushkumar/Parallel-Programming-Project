@@ -73,16 +73,16 @@ Delaunay* Delaunay_DefaultNew( Name name )
 	return d;
 }
 
-/*
+
 Delaunay* Delaunay_New(
 	Name						name,
-	Dictionary*					dictionary,
+	/*Dictionary*					dictionary, */
 	CoordF						*sites,
 	int							numSites,
 	int							idOffset,
 	DelaunayAttributes			*attr )
 {
-*/	/* Variables set in this function */
+       /* Variables set in this function */
 /*	SizeT                                              _sizeOfSelf = sizeof( Delaunay );
 	Type                                                      type = Delaunay_Type;
 	Stg_Class_DeleteFunction*                              _delete = _Delaunay_Delete;
@@ -98,12 +98,13 @@ Delaunay* Delaunay_New(
 
 */	/* Variables that are set to ZERO are variables that will be set either by the current _New function or another parent _New function further up the hierachy */
 /*	AllocationType  nameAllocationType = NON_GLOBAL */ /* default value NON_GLOBAL *//*;*/
-/*
+	/* (Customer change) */
+	Bool                                                  initFlag = True;
 	Delaunay *d = _Delaunay_New(  DELAUNAY_PASSARGS  );
 	
 	return d;
 }
-*/
+
 	/** Initialise a Delaunay */
 /*
 void Delaunay_Init(
@@ -147,11 +148,11 @@ Delaunay* _Delaunay_New(  DELAUNAY_DEFARGS  ) {
 	//nameAllocationType = NON_GLOBAL;
 
 	self = (Delaunay*) malloc(sizeof(self));/*_Stg_Component_New(  STG_COMPONENT_PASSARGS  );*/      
-    if (!self)
-       {
+    	if (!self)
+        {
            printf("NO MEMORY\n");
            exit(0);
-       }
+        }
 	_Delaunay_Init( self, sites, attr, numSites, idOffset, /*dictionary,*/ initFlag );
 
 	return self;
@@ -330,7 +331,7 @@ void _Delaunay_Build( void* delaunay, void* data )
 	self->qp = MemoryPool_New( QuadEdge, self->numSites * 3, 10 );  	
 	Delaunay_SortSites(self->sites, self->numSites);
 
-    Delaunay_Recurse(self, 0, self->numSites, &self->leftMost, &self->rightMost);
+   	Delaunay_Recurse(self, 0, self->numSites, &self->leftMost, &self->rightMost);
 
 	self->numEdges = self->qp->numElements - self->qp->numElementsFree;
 	self->numFaces = self->numEdges - self->numSites + 2;
@@ -995,8 +996,47 @@ int *Delaunay_GetHull( Delaunay *delaunay )
 	return delaunay->hull;
 }
 
+void GeneratePoints( CoordF* sites, int numSites ) {
+   int i, j, count;
+   int num = numSites;
+   printf("probllem1\n");
+   Delaunay*  delaunay;
+   DelaunayAttributes* attr;
+   printf("probllem\n");
+   sites = (CoordF*) malloc(sizeof(CoordF)*numSites);
+   if(sites == NULL)
+   printf("probllem\n");
+   memset( sites, 0, sizeof(CoordF)*numSites );
+
+   attr = (DelaunayAttributes*)malloc(sizeof(DelaunayAttributes)*1);
+
+   attr->BuildBoundingTriangle=0;
+   attr->BuildTriangleIndices=0;
+   attr->BuildTriangleNeighbours=0;
+   attr->CreateVoronoiVertices=1;
+   attr->CalculateVoronoiSides=1;
+   attr->CalculateVoronoiSurfaceArea=0;
+   attr->FindNeighbours=0;
+
+   printf("done\n");
+
+   for( i = 0; i < num; i++ ) 
+   {
+      sites[i][0] = drand48();
+      sites[i][1] = drand48();
+   }
+
+   printf("sites over\n");
+   delaunay = Delaunay_New( "Delaunay-Regular", /*data->dict,*/ sites, numSites, 0, attr );
+
+}
+
 int main(int argc, char **argv)
 {
+    int numSites = 5;
+    CoordF* sites;
+    printf("generating points1 %d \n", numSites);
+    GeneratePoints(sites,numSites);
     printf("Hello, World!");
     return 1;
 }
