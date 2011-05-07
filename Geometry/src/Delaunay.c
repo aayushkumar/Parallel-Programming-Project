@@ -999,17 +999,19 @@ int *Delaunay_GetHull( Delaunay *delaunay )
 void GeneratePoints( CoordF* sites, int numSites ) {
    int i, j, count;
    int num = numSites;
-   printf("probllem1\n");
+   printf("problem1\n");
    Delaunay*  delaunay;
    DelaunayAttributes* attr;
-   printf("probllem\n");
+
+   printf("problem\n");
    sites = (CoordF*) malloc(sizeof(CoordF)*numSites);
+
    if(sites == NULL)
-   printf("probllem\n");
+       printf("probllem\n");
+
    memset( sites, 0, sizeof(CoordF)*numSites );
 
    attr = (DelaunayAttributes*)malloc(sizeof(DelaunayAttributes)*1);
-
    attr->BuildBoundingTriangle=0;
    attr->BuildTriangleIndices=0;
    attr->BuildTriangleNeighbours=0;
