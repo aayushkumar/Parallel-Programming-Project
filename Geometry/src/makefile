@@ -1,13 +1,13 @@
 # the compiler to use.
 CC=gcc
 # FLAGS.
-CFLAGS=-c 
+CFLAGS=-c -g 
 LINK=-lm
 
 all: clean final
 
 final: QuadEdge.o MemoryPool.o  Delaunay.o
-	cc -lm QuadEdge.o MemoryPool.o  Delaunay.o -o delaunay
+	$(CC) -lm QuadEdge.o MemoryPool.o  Delaunay.o -o delaunay
 
 Delaunay.o: Delaunay.c
 	$(CC) $(CFLAGS)  Delaunay.c
