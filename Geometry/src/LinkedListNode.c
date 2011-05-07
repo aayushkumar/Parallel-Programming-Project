@@ -1,8 +1,12 @@
-
+/*
 #include <Base/Foundation/Foundation.h>
 #include <Base/IO/IO.h>
+*/
 
+#include "MemoryPool.h"
+#include "units.h"
 #include "types.h"
+#include "QuadEdge.h"
 #include "LinkedListNode.h"
 
 #include <stdio.h>

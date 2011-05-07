@@ -34,7 +34,12 @@
 		 * The first argument is the data stored inside a node and the second argument can be a single argument or a 
 		 * struct of arguments that need to be passed to the user-supplied function */
 	typedef void	(LinkedList_parseFunction)			( void *, void * );
-	
+
+    typedef enum Order_t{
+    LINKEDLIST_SORTED,
+    LINKEDLIST_UNSORTED
+    } Order;    
+
 	/** \def __List See __List */
 	#define __LinkedList \
 		/* General info */ \
@@ -52,7 +57,7 @@
 		Index						nodeCount;
 
 	struct LinkedList { __LinkedList };
-
+    typedef struct LinkedList LinkedList;
 	/** Constructor interface. */
 	LinkedList* LinkedList_New( 
 				LinkedList_compareFunction*		compareFunction,
@@ -66,13 +71,13 @@
 	#define ZERO 0
 	#endif
 
-	#define LINKEDLIST_DEFARGS \
+/*	#define LINKEDLIST_DEFARGS \
                 STG_CLASS_DEFARGS
 
 	#define LINKEDLIST_PASSARGS \
                 STG_CLASS_PASSARGS
-
-	LinkedList* _LinkedList_New(  LINKEDLIST_DEFARGS  );
+*/
+	LinkedList* _LinkedList_New(  /*LINKEDLIST_DEFARGS */ );
 
 	
 	/** Init interface. */
@@ -86,7 +91,7 @@
 	
 	/** Print interface. */
 		/** Stg_Class print function */
-	void _LinkedList_PrintFunc ( void *list, Stream* stream );
+	/*void _LinkedList_PrintFunc ( void *list, Stream* stream );*/
 
 	/** Public functions */
 		/** Inserts a new node into the tree conserving the list's (Ascending) order */

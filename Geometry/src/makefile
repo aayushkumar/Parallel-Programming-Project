@@ -1,13 +1,16 @@
 # the compiler to use.
-CC=gcc
+CC=mpicc
 # FLAGS.
 CFLAGS=-c -g 
 LINK=-lm
 
-all: clean final
+all: clean parallel
 
-final: QuadEdge.o MemoryPool.o  Delaunay.o
+sequential: QuadEdge.o MemoryPool.o  Delaunay.o
 	$(CC) -lm QuadEdge.o MemoryPool.o  Delaunay.o -o delaunay
+
+parallel: QuadEdge.o MemoryPool.o  Delaunay.o LinkedListNode.o LinkedList.o LinkedListIterator.o ParallelDelaunay.o
+	$(CC) -lm QuadEdge.o MemoryPool.o  Delaunay.o LinkedListNode.o LinkedList.o LinkedListIterator.o ParallelDelaunay.o -o paralleldelaunay
 
 Delaunay.o: Delaunay.c
 	$(CC) $(CFLAGS)  Delaunay.c
@@ -17,6 +20,18 @@ MemoryPool.o: MemoryPool.c
 
 QuadEdge.o: QuadEdge.c
 	$(CC) $(CFLAGS)  QuadEdge.c
+
+LinkedListNode.o: LinkedListNode.c
+	$(CC) $(CFLAGS)  LinkedListNode.c
+
+LinkedList.o: LinkedList.c
+	$(CC) $(CFLAGS)  LinkedList.c
+
+LinkedListIterator.o: LinkedListIterator.c
+	$(CC) $(CFLAGS)  LinkedListIterator.c
+
+ParallelDelaunay.o: ParallelDelaunay.c
+	$(CC) $(CFLAGS)  ParallelDelaunay.c
 
 
 clean:

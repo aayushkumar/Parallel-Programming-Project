@@ -1,6 +1,8 @@
 /*#include <Base/Foundation/Foundation.h>
 #include <Base/IO/IO.h>
 */
+#include "MemoryPool.h"
+#include "units.h"
 #include "types.h"
 #include "LinkedListNode.h"
 #include "LinkedList.h"
@@ -13,7 +15,7 @@
 
 const char * /*Type*/ LinkedListIterator_Type = "LinkedListIterator";
 
-LinkedListIterator *_LinkedListIterator_New(  LINKEDLISTITERATOR_DEFARGS  )
+LinkedListIterator *_LinkedListIterator_New(  /*LINKEDLISTITERATOR_DEFARGS */ )
 {
 	LinkedListIterator *self = NULL;
 
@@ -29,7 +31,7 @@ LinkedListIterator *LinkedListIterator_New( LinkedList *list )
 {
 	/* Variables set in this function */
 	SizeT                      _sizeOfSelf = sizeof(LinkedListIterator);
-	Type                              type = LinkedListIterator_Type;
+	const char* /*Type*/                              type = LinkedListIterator_Type;
 	/*Stg_Class_DeleteFunction*      _delete = _LinkedListIterator_DeleteFunc;
 	Stg_Class_PrintFunction*        _print = _LinkedListIterator_PrintFunc;
 	Stg_Class_CopyFunction*          _copy = NULL;
@@ -38,7 +40,7 @@ LinkedListIterator *LinkedListIterator_New( LinkedList *list )
 	LinkedListIterator* self;
 	
 	assert( list );
-	self = _LinkedListIterator_New(  LINKEDLISTITERATOR_PASSARGS  );
+	self = _LinkedListIterator_New(  /*LINKEDLISTITERATOR_PASSARGS  */);
 	/* General info */
 	
 	/* Virtual functions */

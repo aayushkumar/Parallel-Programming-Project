@@ -26,7 +26,7 @@
 		LinkedListNode	*curr;
 	
 	struct LinkedListIterator { __LinkedListIterator };
-	
+	typedef struct LinkedListIterator LinkedListIterator;
 
 	/** Constructor interface. */
 	LinkedListIterator* LinkedListIterator_New( LinkedList *list );
@@ -36,13 +36,14 @@
 	#define ZERO 0
 	#endif
 
+    /*
 	#define LINKEDLISTITERATOR_DEFARGS \
                 STG_CLASS_DEFARGS
 
 	#define LINKEDLISTITERATOR_PASSARGS \
                 STG_CLASS_PASSARGS
-
-	LinkedListIterator *_LinkedListIterator_New(  LINKEDLISTITERATOR_DEFARGS  );
+    */
+	LinkedListIterator *_LinkedListIterator_New(  /*LINKEDLISTITERATOR_DEFARGS  */);
 	
 	/** Init interface. */
 	void _LinkedListIterator_Init( LinkedListIterator *self );
@@ -51,7 +52,7 @@
 	void _LinkedListIterator_DeleteFunc( void *self );
 
 	/** Print Interface */
-	void _LinkedListIterator_PrintFunc( void *, Stream * );
+	/*void _LinkedListIterator_PrintFunc( void *, Stream * );*/
 	
 	#define LinkedListIterator_First( it ) \
                 ((it==NULL)?NULL:(it->list == NULL)?NULL:((it->curr = it->list->head)==NULL)?NULL:it->curr->data)

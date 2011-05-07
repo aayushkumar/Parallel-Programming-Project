@@ -29,7 +29,7 @@
 		struct LinkedListNode		*next; 
 
 	struct LinkedListNode { __LinkedListNode };
-
+    typedef struct LinkedListNode LinkedListNode;
 
 	/** Constructor interface. */
 	LinkedListNode *LinkedListNode_New ( void );

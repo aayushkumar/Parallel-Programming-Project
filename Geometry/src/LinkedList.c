@@ -1,7 +1,10 @@
-#include <Base/Foundation/Foundation.h>
+/*#include <Base/Foundation/Foundation.h>
 #include <Base/IO/IO.h>
-
+*/
+#include "MemoryPool.h"
+#include "units.h"
 #include "types.h"
+#include "QuadEdge.h"
 #include "LinkedListNode.h"
 #include "LinkedList.h"
 
@@ -10,12 +13,12 @@
 #include <assert.h>
 #include <string.h>
 
-const Type LinkedList_Type = "LinkedList";
+const char* /*Type*/ LinkedList_Type = "LinkedList";
 
 /*----------------------------------------------------------------------------------------------------------------------------------
 ** Constructors
 */
-LinkedList* _LinkedList_New(  LINKEDLIST_DEFARGS  )
+LinkedList* _LinkedList_New(  /*LINKEDLIST_DEFARGS*/  )
 {
 	LinkedList *self = NULL;
 
@@ -34,18 +37,18 @@ LinkedList* LinkedList_New(
 {
 	/* Variables set in this function */
 	SizeT                      _sizeOfSelf = sizeof(LinkedList);
-	char * /*Type*/                              type = LinkedList_Type;
-	Stg_Class_DeleteFunction*      _delete = _LinkedList_DeleteFunc;
+	const char * /*Type*/                              type = LinkedList_Type;
+	/*Stg_Class_DeleteFunction*      _delete = _LinkedList_DeleteFunc;
 	Stg_Class_PrintFunction*        _print = _LinkedList_PrintFunc;
 	Stg_Class_CopyFunction*          _copy = NULL;
-
+    */
 	
 	LinkedList* self;
 	
 	/* General info */
 	assert ( compareFunction );
 	
-	self = _LinkedList_New(  LINKEDLIST_PASSARGS  );
+	self = _LinkedList_New(  /*LINKEDLIST_PASSARGS*/  );
 
 	/* List info */
 	self->compareFunction = compareFunction;
