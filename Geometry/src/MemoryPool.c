@@ -68,15 +68,20 @@ void _MemoryPool_Init( MemoryPool* self ){
 	
 	assert( self->numMemChunks == 1 );
 
+    /* Initially only one chunk.  So, in the beginning allocating one memchunk
+     */
 	self->chunks = (MemChunk*) malloc(sizeof(MemChunk)*self->numMemChunks);/*Memory_Alloc_Bytes_Unnamed( sizeof(MemChunk)*self->numMemChunks, "char*" );*/
-	self->chunks[self->numMemChunks-1].memory = malloc(self->elementSize * self->numElements); /*Memory_Alloc_Bytes_Unnamed( self->elementSize * self->numElements, "char" );*/
+	/* The memory data member inside MemChunk chunks is allocated memory
+     * passed in - numElems * sizeof each element */
+    self->chunks[self->numMemChunks-1].memory = malloc(self->elementSize * self->numElements); /*Memory_Alloc_Bytes_Unnamed( self->elementSize * self->numElements, "char" );*/
 	memset( self->chunks[self->numMemChunks-1].memory, 0, self->elementSize * self->numElements );
 	self->chunks[self->numMemChunks-1].numFree = self->numElements;
 	self->chunks[self->numMemChunks-1].maxFree = self->numElements;
 
 	self->pool = malloc(sizeof(char*) * self->numElements); /*Memory_Alloc_Bytes_Unnamed( sizeof( char* ) * self->numElements, "char*" );*/
 	memset( self->pool, 0, sizeof(char*) * self->numElements );
-	
+
+    /* Here each pool element points to chunk of memory assigned*/    
 	for( i=0; i<self->numElements; i++ ){
 		self->pool[i] = &(self->chunks[self->numMemChunks-1].memory[i*self->elementSize]);
 	}
@@ -158,6 +163,7 @@ void *MemoryPool_NewObjectFunc( SizeT elementSize, MemoryPool *memPool )
         */
 	}
 
+    /* This gets the next free memory position in memchunk */
 	result = (void*)(memPool->pool[--memPool->numElementsFree]);
 
 	for( i=0; i<memPool->numMemChunks; i++ ){

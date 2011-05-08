@@ -191,6 +191,7 @@ ParallelDelaunay* _ParallelDelaunay_New(  PARALLELDELAUNAY_DEFARGS  )
 	return self;
 }
 
+/*
 int ParallelDelaunayBtreeCompareFunction( void *a, void *b )
 {
 	Site *s1, *s2;
@@ -216,6 +217,7 @@ int ParallelDelaunayBtreeCompareFunction( void *a, void *b )
 		return -1;
 	}
 }
+*/
 
 #define epsilon 0.0001
 #define LOAD_TAG 1
@@ -358,7 +360,8 @@ void _ParallelDelaunay_Build( void* pd, void* data ) {
 			printf( "processorLoad[%d] = %d\n", i, self->processorLoad[i] );
 		}*/
 		
-		for( i=MASTER_PROC+1; i<numProcs; i++ ){
+        /* This is a MPI_Scatter */
+        for( i=MASTER_PROC+1; i<numProcs; i++ ){
 			MPI_Send( &(self->processorLoad[i]), 1, MPI_INT, i, LOAD_TAG, *self->comm );
 		}
 
@@ -403,17 +406,20 @@ void _ParallelDelaunay_Build( void* pd, void* data ) {
 	}
 	else{
 		MPI_Status status;
-		
+        
+        /* This is the number of points that machine 'i' is dealing with */        
 		MPI_Recv( &self->numLocalSites, 1, MPI_INT, MASTER_PROC, LOAD_TAG, *self->comm, &status );
-
+        /* Mallocing space for those points */
 		self->localPoints = (CoordF*) malloc(sizeof(CoordF) * self->numLocalSites); /*Memory_Alloc_Array_Unnamed( CoordF, self->numLocalSites );*/
-
+        /* Receiving the points I am to deal with */
 		MPI_Recv( self->localPoints, sizeof(CoordF)*self->numLocalSites, MPI_BYTE, MASTER_PROC, DATA_TAG, *self->comm, &status );
 	}
 
+    /* Broadcasting the number points that each machine will handle */
 	MPI_Bcast( self->processorLoad, numProcs, MPI_INT, MASTER_PROC, *self->comm );
 	self->numTotalLocalSites = self->numLocalSites;
 
+    /* Calculating the offset */
 	offset = 0;
 	for( i=0; i<self->rank; i++ ){
 		offset += self->processorLoad[i];
@@ -426,17 +432,27 @@ void _ParallelDelaunay_Build( void* pd, void* data ) {
 			&self->localTriangulation->leftMost, &self->localTriangulation->rightMost);
 
 	for( i=0; i<numSites; i++ ){
-		self->mapGlobalToLocal[i] = numSites;
+		self->mapGlobalToLocal[i] = numSites;   /* I think this is like saying NULL */
 	}
-	
+
+    /* Kind of like saying that those mapGlobalToLocal[j] which are not equal
+     * to numSites (or null) are contained in this triangulation or those
+     * points are handled by this machine
+     */    
 	for( i=0; i<self->numLocalSites; i++ ){
 		self->mapGlobalToLocal[self->localTriangulation->sites[i].id] = self->localTriangulation->sites[i].id;
 	}
-	
+
+    /*
+     * Here, everyone but machine 0 calls ParallelDelaunayMerge 
+     */    
 	if( self->leftProc != self->numProcs ){
 		ParallelDelaunayMerge( self, self->comm, self->leftProc );
 	}
-		
+	
+    /*
+     * Here everyone by the last machine calls ParallelDelaunayMerge
+     */    
 	if( self->rightProc != self->numProcs ){
 		ParallelDelaunayMerge( self, self->comm, self->rightProc );
 	}
@@ -1345,6 +1361,7 @@ void ParallelDelaunayMerge( ParallelDelaunay *pd, MPI_Comm *comm, int rank )
 			}
 		}
 	}
+    /* Second time that Merge is called - Merge with the right machine*/
 	else if( rank == pd->rightProc ){
 		lcand = lowest;
 		
@@ -1412,4 +1429,138 @@ void ParallelDelaunayMerge( ParallelDelaunay *pd, MPI_Comm *comm, int rank )
 }
 
 
+void GeneratePoints( CoordF* sites, int numSites ) {
+   int i, j, count;
+   int num = numSites;
+   printf("problem1\n");
+   Delaunay*  delaunay;
+   DelaunayAttributes* attr;
 
+   printf("problem\n");
+   sites = (CoordF*) malloc(sizeof(CoordF)*numSites);
+
+   if(sites == NULL)
+       printf("probllem\n");
+
+   memset( sites, 0, sizeof(CoordF)*numSites );
+
+   attr = (DelaunayAttributes*)malloc(sizeof(DelaunayAttributes)*1);
+   attr->BuildBoundingTriangle=0;
+   attr->BuildTriangleIndices=0;
+   attr->BuildTriangleNeighbours=0;
+   attr->CreateVoronoiVertices=1;
+   attr->CalculateVoronoiSides=1;
+   attr->CalculateVoronoiSurfaceArea=1;
+   attr->FindNeighbours=1;
+
+   printf("done\n");
+
+   /*   for( i = 0; i < num; i++ ) 
+   {
+      sites[i][0] = drand48();
+      sites[i][1] = drand48();
+   }
+   */
+   sites[0][0] = 0;
+   sites[0][1] = 0;
+   
+   sites[1][0] = 1;
+   sites[1][1] = 2;
+
+   sites[2][0] = 2;
+   sites[2][1] = 1;
+
+   sites[3][0] = 3;
+   sites[3][1] = 2;
+
+   sites[4][0] = 4;
+   sites[4][1] = 0;
+
+   sites[5][0] = 5;
+   sites[5][1] = 1;
+
+   printf("sites over\n");
+   delaunay = Delaunay_New( "Delaunay-Regular", /*data->dict,*/ sites, numSites, 0, attr );
+   _Delaunay_Build(delaunay, NULL);
+
+    printf("\tNum Sites %d\n", delaunay->numSites );
+    printf("\tNum Edges %d\n", delaunay->numEdges );
+    printf("\tNum Triangles %d\n", delaunay->numTriangles );
+	printf("\tNum Voronoi Vertices %d\n", delaunay->numVoronoiVertices );
+    printf("\tNum faces are: %d\n", delaunay->numFaces);
+
+    int numFree = delaunay->vp->numElementsFree;
+    printf("\tNum elements free are: %d\n", numFree);
+
+    for (i=0; i<delaunay->numVoronoiVertices; i++)
+    {
+        float *x = (float *)delaunay->vp->pool[i+numFree];
+
+        printf("x=%f, y=%f\n", x[0],x[1]);
+
+    }
+    
+    int maxEdges = delaunay->qp->numElements;
+	QuadEdge *edges = NULL;
+	edges = (QuadEdge*)delaunay->qp->chunks[0].memory;
+    QuadEdgeRef e = 0;
+
+    printf ("\n\n");
+    for (i=0; i<maxEdges; i++)
+    {
+		e = (QuadEdgeRef)((void*)&(edges[i]));
+		if( IS_FREE(e) )
+        {
+            printf("Free when i is %d\n", i);
+            continue;
+        }
+        
+        QuadEdgeRef eOnext = ONEXT(e);
+	    QuadEdgeRef eLnext = LNEXT(e);
+
+        float *dest = VDEST( e );
+        float *orig = VORG( eLnext );
+
+        if (orig == NULL)
+        {
+            printf("\nOrigin to Infinity; Dest is: (%f, %f)\n", dest[0], dest[1]);
+            //QuadEdgeRef newE = TOR(e);
+            //QuadEdgeRef neOnext = ONEXT(newE);
+            //QuadEdgeRef neLnext = LNEXT(newE);
+            float *tempO = ((Site *)DEST(eLnext))->coord;
+            float *temp = ((Site *)DEST(e))->coord;
+            printf("Triangulation vertex is: (%f, %f) -> (%f,%f)\n\n",tempO[0], tempO[1], temp[0],temp[1]); 
+        }
+        else if (dest == NULL)
+        {       
+            printf("\norigin is: (%f, %f) - Dest to infinity\n", orig[0], orig[1]);
+            float *tempO = ((Site *)DEST(eLnext))->coord;
+            float *temp = ((Site *)DEST(e))->coord;
+            printf("Triangulation vertex is: (%f, %f) -> (%f,%f)\n\n",tempO[0], tempO[1], temp[0],temp[1]); 
+        }
+        else
+            printf("Edge from (%f,%f) to (%f,%f)\n",orig[0],orig[1],dest[0],dest[1]);
+    }
+    printf ("\n\n");
+
+    for (i=0; i<delaunay->numSites; i++)
+    {
+
+        printf("Voronoi Side is for site[%d] is: ", i);
+        for (j=0; j<6; j++)
+        {
+                 printf("%f ", delaunay->voronoiSides[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+int main(int argc, char **argv)
+{
+    int numSites = 6;
+    CoordF* sites;
+    printf("generating points1 %d \n", numSites);
+    GeneratePoints(sites,numSites);
+    printf("Hello, World!");
+    return 1;
+}

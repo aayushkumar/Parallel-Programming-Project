@@ -6,8 +6,6 @@
 	/** Textual name of this class */
     extern const char* QuadEdge_Type;
 
-	#define IN_USE 1
-	
 	typedef struct VoronoiVertex_t{
 		float point[2];
 	}VoronoiVertex;
@@ -19,6 +17,7 @@
 		unsigned		count;\
 		unsigned		attributes;
 
+    /* Note that QuadEdgeRef is a "long int" */
 	struct QuadEdge { __QuadEdge };
 
 /* Defining WORD according to the architecture */
@@ -35,6 +34,8 @@
 #define IS_FREE(e)		(!(((QuadEdge *)((e)&WORD))->attributes == IN_USE))
 #define SET_IN_USE(e)	(((QuadEdge *)((e)&WORD))->attributes = IN_USE)
 #define SET_FREE(e)		(((QuadEdge *)((e)&WORD))->attributes = 0)*/
+
+#define IN_USE 1
 
 #define IS_IN_USE(e)   (((QuadEdge *)((e)&WORD))->attributes & IN_USE)
 #define IS_FREE(e)             (!(((QuadEdge *)((e)&WORD))->attributes & IN_USE))

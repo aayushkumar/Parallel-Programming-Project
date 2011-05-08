@@ -337,6 +337,7 @@ void _Delaunay_Build( void* delaunay, void* data )
 
 	attr = self->attributes;
 
+    /* VoronoiVertex is a struct with just a float[2] */
 	if( attr->CreateVoronoiVertices ){
         printf("Going to create voronoi vertices\n");
 		self->vp = MemoryPool_New( VoronoiVertex, self->numSites * 2, 10 );
@@ -477,7 +478,8 @@ int InCircle(Site *a, Site *b, Site *c, Site *d)
 void Delaunay_Recurse( Delaunay *delaunay, int sl, int sh, QuadEdgeRef *le, QuadEdgeRef *re )
 {
 	Site *sites = delaunay->sites;
-	
+
+    /* Two points only */    
 	if (sh == sl+2) 
 	{
 		QuadEdgeRef a = MakeQuadEdge( delaunay->qp );
@@ -767,7 +769,7 @@ void Delaunay_BuildVoronoiVertices( Delaunay *delaunay )
 							
 						new_voronoi_site = MemoryPool_NewObject( VoronoiVertex, delaunay->vp );
 					
-						/* Fiding the center of the circumcircle defined by org(e), dest(eonext) and dest(e)
+						/* Finding the center of the circumcircle defined by org(e), dest(eonext) and dest(e)
 						 * and retrieving the result via new_voronoi_site */
 						CIRCUM_CIRCLE( ((Site*)ORG(e))->coord, ((Site*)DEST(eOnext))->coord, ((Site*)DEST(e))->coord, &(new_voronoi_site) );
 						
@@ -993,85 +995,4 @@ int *Delaunay_GetHull( Delaunay *delaunay )
 	assert( delaunay );
 
 	return delaunay->hull;
-}
-
-void GeneratePoints( CoordF* sites, int numSites ) {
-   int i, j, count;
-   int num = numSites;
-   printf("problem1\n");
-   Delaunay*  delaunay;
-   DelaunayAttributes* attr;
-
-   printf("problem\n");
-   sites = (CoordF*) malloc(sizeof(CoordF)*numSites);
-
-   if(sites == NULL)
-       printf("probllem\n");
-
-   memset( sites, 0, sizeof(CoordF)*numSites );
-
-   attr = (DelaunayAttributes*)malloc(sizeof(DelaunayAttributes)*1);
-   attr->BuildBoundingTriangle=0;
-   attr->BuildTriangleIndices=0;
-   attr->BuildTriangleNeighbours=0;
-   attr->CreateVoronoiVertices=1;
-   attr->CalculateVoronoiSides=1;
-   attr->CalculateVoronoiSurfaceArea=1;
-   attr->FindNeighbours=1;
-
-   printf("done\n");
-
-   /*   for( i = 0; i < num; i++ ) 
-   {
-      sites[i][0] = drand48();
-      sites[i][1] = drand48();
-   }
-   */
-   sites[0][0] = 0;
-   sites[0][1] = 0;
-   
-   sites[1][0] = 1;
-   sites[1][1] = 2;
-
-   sites[2][0] = 2;
-   sites[2][1] = 1;
-
-   sites[3][0] = 3;
-   sites[3][1] = 2;
-
-   sites[4][0] = 4;
-   sites[4][1] = 0;
-
-   sites[5][0] = 5;
-   sites[5][1] = 1;
-
-   printf("sites over\n");
-   delaunay = Delaunay_New( "Delaunay-Regular", /*data->dict,*/ sites, numSites, 0, attr );
-   _Delaunay_Build(delaunay, NULL);
-
-    printf("\tNum Sites %d\n", delaunay->numSites );
-    printf("\tNum Edges %d\n", delaunay->numEdges );
-    printf("\tNum Triangles %d\n", delaunay->numTriangles );
-	printf("\tNum Voronoi Vertices %d\n", delaunay->numVoronoiVertices );
-
-    for (i=0; i<delaunay->numSites; i++)
-    {
-
-        printf("Voronoi Side is for site[%d] is: ", i);
-        for (j=0; j<6; j++)
-        {
-                 printf("%f ", delaunay->voronoiSides[i][j]);
-        }
-        printf("\n");
-    }
-}
-
-int main(int argc, char **argv)
-{
-    int numSites = 6;
-    CoordF* sites;
-    printf("generating points1 %d \n", numSites);
-    GeneratePoints(sites,numSites);
-    printf("Hello, World!");
-    return 1;
 }
