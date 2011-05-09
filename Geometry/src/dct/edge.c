@@ -2,6 +2,7 @@
 #include  "decl.h"
 #include  "edge.h"
 #include  "extern.h"
+#include <stdlib.h>
 
 /* 
  *  Creates a new edge and adds it to two rings of edges.
