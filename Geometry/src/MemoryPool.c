@@ -12,6 +12,13 @@
 #include <assert.h>
 #include <string.h>
 
+/* Custom added function.  Should ideally be in a memory file */
+void Memory_Free(void *ptr)
+{
+    if (!ptr)
+        return;
+    free(ptr);
+}
 const char* /*Type */MemoryPool_Type = "MemoryPool";
 
 /*----------------------------------------------------------------------------------------------------------------------------------
@@ -153,14 +160,14 @@ void *MemoryPool_NewObjectFunc( SizeT elementSize, MemoryPool *memPool )
 	
 	assert( elementSize == memPool->elementSize );
 	
-/*label:*/	index = memPool->numElementsFree - 1;
+label:	index = memPool->numElementsFree - 1;
 
 	if( index < 0 ){
-        printf("This is index<0 in MemoryPool_NewObjectFunc! We actually enter here!!\n");
-        exit(0);
-		/*MemoryPool_Extend( memPool );
+        /*printf("This is index<0 in MemoryPool_NewObjectFunc! We actually enter here!!\n");
+        exit(0);*/
+		MemoryPool_Extend( memPool );
 		goto label;
-        */
+        
 	}
 
     /* This gets the next free memory position in memchunk */
@@ -214,7 +221,6 @@ Bool MemoryPool_DeleteObject( MemoryPool *memPool, void *object )
 	}
 }
 */
-/*
 void MemoryPool_Extend( MemoryPool *memPool )
 {
 	int i = 0;
@@ -224,15 +230,15 @@ void MemoryPool_Extend( MemoryPool *memPool )
 
 	memPool->numMemChunks++;
 
-	memPool->chunks = (MemChunk*)Memory_Realloc( memPool->chunks, sizeof(MemChunk)*memPool->numMemChunks );
+	memPool->chunks = (MemChunk*)realloc(memPool->chunks, sizeof(MemChunk)*memPool->numMemChunks);/*Memory_Realloc( memPool->chunks, sizeof(MemChunk)*memPool->numMemChunks );*/
 	assert( memPool->chunks );
 
-	memPool->chunks[memPool->numMemChunks-1].memory = Memory_Alloc_Bytes_Unnamed( memPool->elementSize * memPool->delta, "int" );
+	memPool->chunks[memPool->numMemChunks-1].memory = malloc(memPool->elementSize*memPool->delta);/*Memory_Alloc_Bytes_Unnamed( memPool->elementSize * memPool->delta, "int" );*/
 	memset( memPool->chunks[memPool->numMemChunks-1].memory, 0, memPool->elementSize * memPool->delta );
 	memPool->chunks[memPool->numMemChunks-1].numFree = memPool->delta;
 	memPool->chunks[memPool->numMemChunks-1].maxFree = memPool->delta;
 
-	newPool = Memory_Alloc_Bytes_Unnamed( sizeof(char*) * (memPool->numElements+memPool->delta), "char*" );
+	newPool = malloc(sizeof(char*)*(memPool->numElements + memPool->delta)); /*Memory_Alloc_Bytes_Unnamed( sizeof(char*) * (memPool->numElements+memPool->delta), "char*" );*/
 	assert( newPool );
 
 	memcpy( newPool+memPool->delta, memPool->pool, sizeof(char*)*memPool->numElements );
@@ -251,6 +257,7 @@ void MemoryPool_Extend( MemoryPool *memPool )
 	}
 }
 
+/*
 void MemoryPool_Shrink( MemoryPool *memPool )
 {
 	int i = 0;

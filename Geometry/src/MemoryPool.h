@@ -17,6 +17,9 @@
 #ifndef __StGermain_Base_Container_MemoryPool_h__
 #define __StGermain_Base_Container_MemoryPool_h__
 
+/* Custom added function */
+void Memory_Free(void *ptr);
+
 	/** Textual name for List class. */
     typedef unsigned long SizeT;
     extern const char* MemoryPool_Type;

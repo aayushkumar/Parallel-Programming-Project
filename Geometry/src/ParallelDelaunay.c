@@ -113,13 +113,6 @@ ParallelDelaunay* ParallelDelaunay_New(
 }
 
 
-/* Custom added function.  Should ideally be in a memory file */
-void Memory_Free(void *ptr)
-{
-    if (!ptr)
-        return;
-    free(ptr);
-}
 
 #define MASTER_PROC 0
 
@@ -191,7 +184,6 @@ ParallelDelaunay* _ParallelDelaunay_New(  PARALLELDELAUNAY_DEFARGS  )
 	return self;
 }
 
-/*
 int ParallelDelaunayBtreeCompareFunction( void *a, void *b )
 {
 	Site *s1, *s2;
@@ -217,7 +209,6 @@ int ParallelDelaunayBtreeCompareFunction( void *a, void *b )
 		return -1;
 	}
 }
-*/
 
 #define epsilon 0.0001
 #define LOAD_TAG 1
@@ -465,7 +456,6 @@ void _ParallelDelaunay_Initialise( void* pd, void* data )
 }
 */
 
-/*
 void _ParallelDelaunay_Execute( void* pd, void* data )
 {
 	DelaunayAttributes attr;
@@ -485,18 +475,19 @@ void _ParallelDelaunay_Execute( void* pd, void* data )
 		ParallelDelaunay_RetriangulateAfterMerge( self, RIGHT );
 	}
 
-	Stg_Class_Delete( self->localTriangulation );
+	/*Stg_Class_Delete( self->localTriangulation );*/  //TODO: Free Memory
 	
 	memcpy( &attr, self->attributes, sizeof( DelaunayAttributes ) );
 	attr.BuildTriangleIndices = 0;
-	self->localTriangulation = Delaunay_New( "delaunay", self->dictionary, self->localPoints, self->numTotalLocalSites, offset, &attr );
-	Stg_Component_Build( self->localTriangulation, NULL, True );
+	self->localTriangulation = Delaunay_New( "delaunay", /*self->dictionary,*/ self->localPoints, self->numTotalLocalSites, offset, &attr );
+	/*Stg_Component_Build( self->localTriangulation, NULL, True );*/
+    _Delaunay_Build(self->localTriangulation, NULL);
+    self->localTriangulation->isBuilt = True;
 	
 	if( self->attributes->BuildTriangleIndices ){
 		ParallelDelaunay_BuildTriangleIndices( self );
 	}	
 }
-*/
 
 void _ParallelDelaunay_Destroy( void* pd, void* data ) { 
    ParallelDelaunay *self = (ParallelDelaunay*)pd;
@@ -525,7 +516,7 @@ void _ParallelDelaunay_Destroy( void* pd, void* data ) {
 #define onRightProc( pd, id ) ( ( pd->numHaloSites[1]>0 ) && ( id >= (pd->processorLoad[pd->rank]+pd->localTriangulation->idOffset+pd->numHaloSites[0]) ) && \
 				( id < (pd->numTotalLocalSites+pd->localTriangulation->idOffset) ) )
 
-/*
+
 void ParallelDelaunay_RetriangulateAfterMerge( ParallelDelaunay *pd, Direction d )
 {
 		BTreeIterator *iter = NULL;
@@ -674,14 +665,14 @@ void ParallelDelaunay_BuildTriangleIndices( ParallelDelaunay *pd )
 	
 	delaunay->numTriangles = triCount;
 }
-*/
+
 #define NEIGHBOURS_TAG 1<<4
 #define VORONOI_SIDES_TAG 1<<5
 #define VORONOI_AREA_TAG 1<<6
 #define NUM_NEIGHBOUR_TAG 1<<7
 #define MAX_NEIGHBOURS 100
 
-/*void ParallelDelaunay_GatherTriangulation( ParallelDelaunay *pd )
+void ParallelDelaunay_GatherTriangulation( ParallelDelaunay *pd )
 {
 	int i, j, k, l, count, count1;
 	MPI_Status st;
@@ -983,10 +974,10 @@ void ParallelDelaunay_BuildTriangleIndices( ParallelDelaunay *pd )
 				pd->triangleIndices[i][2] = pd->initialOrder[pd->triangleIndices[i][2]];
 			}
 
-*/			/*for( j=0; j<globalNumTriangles; j++ ){
+			/*for( j=0; j<globalNumTriangles; j++ ){
 				printf( "indices[%d] = [%d, %d, %d]\n", j, pd->triangleIndices[j][0], pd->triangleIndices[j][1], pd->triangleIndices[j][2] );
 			}*/
-/*			
+			
 			stride = 0;
 			if ( pd->attributes->BuildTriangleNeighbours ){
 				int **nodeToTriangle = NULL;
@@ -1068,7 +1059,7 @@ void ParallelDelaunay_BuildTriangleIndices( ParallelDelaunay *pd )
 		Memory_Free( triCountArray );
 	}	
 }
-*/
+
 	/*--------------------------------------------------------------------------------------------------------------------------
 	** Private Member functions
 	*/
@@ -1428,61 +1419,8 @@ void ParallelDelaunayMerge( ParallelDelaunay *pd, MPI_Comm *comm, int rank )
 	}
 }
 
-
-void GeneratePoints( CoordF* sites, int numSites ) {
-   int i, j, count;
-   int num = numSites;
-   printf("problem1\n");
-   Delaunay*  delaunay;
-   DelaunayAttributes* attr;
-
-   printf("problem\n");
-   sites = (CoordF*) malloc(sizeof(CoordF)*numSites);
-
-   if(sites == NULL)
-       printf("probllem\n");
-
-   memset( sites, 0, sizeof(CoordF)*numSites );
-
-   attr = (DelaunayAttributes*)malloc(sizeof(DelaunayAttributes)*1);
-   attr->BuildBoundingTriangle=0;
-   attr->BuildTriangleIndices=0;
-   attr->BuildTriangleNeighbours=0;
-   attr->CreateVoronoiVertices=1;
-   attr->CalculateVoronoiSides=1;
-   attr->CalculateVoronoiSurfaceArea=1;
-   attr->FindNeighbours=1;
-
-   printf("done\n");
-
-   /*   for( i = 0; i < num; i++ ) 
-   {
-      sites[i][0] = drand48();
-      sites[i][1] = drand48();
-   }
-   */
-   sites[0][0] = 0;
-   sites[0][1] = 0;
-   
-   sites[1][0] = 1;
-   sites[1][1] = 2;
-
-   sites[2][0] = 2;
-   sites[2][1] = 1;
-
-   sites[3][0] = 3;
-   sites[3][1] = 2;
-
-   sites[4][0] = 4;
-   sites[4][1] = 0;
-
-   sites[5][0] = 5;
-   sites[5][1] = 1;
-
-   printf("sites over\n");
-   delaunay = Delaunay_New( "Delaunay-Regular", /*data->dict,*/ sites, numSites, 0, attr );
-   _Delaunay_Build(delaunay, NULL);
-
+void print_stats(Delaunay *delaunay)
+{
     printf("\tNum Sites %d\n", delaunay->numSites );
     printf("\tNum Edges %d\n", delaunay->numEdges );
     printf("\tNum Triangles %d\n", delaunay->numTriangles );
@@ -1491,7 +1429,7 @@ void GeneratePoints( CoordF* sites, int numSites ) {
 
     int numFree = delaunay->vp->numElementsFree;
     printf("\tNum elements free are: %d\n", numFree);
-
+    int i, j;
     for (i=0; i<delaunay->numVoronoiVertices; i++)
     {
         float *x = (float *)delaunay->vp->pool[i+numFree];
@@ -1511,7 +1449,7 @@ void GeneratePoints( CoordF* sites, int numSites ) {
 		e = (QuadEdgeRef)((void*)&(edges[i]));
 		if( IS_FREE(e) )
         {
-            printf("Free when i is %d\n", i);
+            //printf("Free when i is %d\n", i);
             continue;
         }
         
@@ -1524,9 +1462,6 @@ void GeneratePoints( CoordF* sites, int numSites ) {
         if (orig == NULL)
         {
             printf("\nOrigin to Infinity; Dest is: (%f, %f)\n", dest[0], dest[1]);
-            //QuadEdgeRef newE = TOR(e);
-            //QuadEdgeRef neOnext = ONEXT(newE);
-            //QuadEdgeRef neLnext = LNEXT(newE);
             float *tempO = ((Site *)DEST(eLnext))->coord;
             float *temp = ((Site *)DEST(e))->coord;
             printf("Triangulation vertex is: (%f, %f) -> (%f,%f)\n\n",tempO[0], tempO[1], temp[0],temp[1]); 
@@ -1555,12 +1490,99 @@ void GeneratePoints( CoordF* sites, int numSites ) {
     }
 }
 
+
+void GeneratePoints( CoordF* sites, int numSites, int parallel ) {
+   int i, j, count;
+   int num = numSites;
+   
+   MPI_Comm_rank( mpiComm, &rank );
+   DelaunayAttributes* attr;
+
+   sites = (CoordF*) malloc(sizeof(CoordF)*numSites);
+   if(sites == NULL)
+       printf("Not enough memory to allocate points\n");
+   memset( sites, 0, sizeof(CoordF)*numSites );
+
+   attr = (DelaunayAttributes*)malloc(sizeof(DelaunayAttributes)*1);
+   attr->BuildBoundingTriangle=0;
+   attr->BuildTriangleIndices=0;
+   attr->BuildTriangleNeighbours=0;
+   attr->CreateVoronoiVertices=1;
+   attr->CalculateVoronoiSides=1;
+   attr->CalculateVoronoiSurfaceArea=1;
+   attr->FindNeighbours=1;
+
+   /*   for( i = 0; i < num; i++ ) 
+   {
+      sites[i][0] = drand48();
+      sites[i][1] = drand48();
+   }
+   */
+   sites[0][0] = 0;
+   sites[0][1] = 0;
+   
+   sites[1][0] = 1;
+   sites[1][1] = 2;
+
+   sites[2][0] = 2;
+   sites[2][1] = 1;
+
+   sites[3][0] = 3;
+   sites[3][1] = 2;
+
+   sites[4][0] = 4;
+   sites[4][1] = 0;
+
+   sites[5][0] = 5;
+   sites[5][1] = 1;
+
+   printf("sites over\n");
+   
+   if (!parallel)
+   {
+       Delaunay* delaunay;
+       delaunay = Delaunay_New( "Delaunay-Regular", /*data->dict,*/ sites, numSites, 0, attr );
+       _Delaunay_Build(delaunay, NULL);
+       print_stats(delaunay);
+   }
+   else
+   {
+       MPI_Comm          mpiComm;
+       int               rank, nRanks;
+ 
+       MPI_Comm_dup( MPI_COMM_WORLD, &mpiComm );
+       MPI_Comm_size( mpiComm, &nRanks );
+
+       ParallelDelaunay *delaunay;
+       printf("[%d] About to call Delaunay_New\n", rank);
+       delaunay = ParallelDelaunay_New( "Delaunay-Parallel", /*data->dict,*/ sites, numSites, rank, nRanks, &mpiComm, attr );
+       _ParallelDelaunay_Build(delaunay, NULL);
+       printf("[%d] Finish Delaunay Build\n", rank);
+       ParallelDelaunay_Execute( delaunay, NULL, True );
+
+       ParallelDelaunay_GatherTriangulation( delaunay );
+       MPI_Barrier( mpiComm );
+
+
+
+        printf("[%d] The number of procs is: %d and my rank is %d\n numLocalSites = %d, numTotalLocalSites = %d\n", rank, delaunay->numProcs, delaunay->rank, delaunay->numLocalSites, delaunay->numTotalLocalSites);
+
+       if (rank == 0)
+           print_stats(delaunay);
+   }
+}
+
 int main(int argc, char **argv)
 {
+    int parallel = 1;
+    if (parallel)
+        MPI_Init(&argc, &argv);
     int numSites = 6;
     CoordF* sites;
     printf("generating points1 %d \n", numSites);
-    GeneratePoints(sites,numSites);
+    GeneratePoints(sites,numSites, parallel);
     printf("Hello, World!");
+    if (parallel)
+        MPI_Finalize();
     return 1;
 }
