@@ -7,11 +7,8 @@ void delete_edge(edge *e);
 void splice(edge *a, edge *b, point *v);
 edge *make_edge(point *u, point *v);
 
-/* error.c */
-void panic(char *m);
-
 /* i_o.c */
-int read_points(int n);
+int read_points();
 void print_results(int argc, char *argv[],cardinal n, char o);
 
 /* memory.c */

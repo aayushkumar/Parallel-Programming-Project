@@ -11,15 +11,15 @@ typedef  struct   point   point;
 typedef  struct  edge  edge;
 
 struct point {
-  ordinate x,y;
-  edge *entry_pt;
+    ordinate x,y;
+    edge *entry_pt;
 };
 
 struct edge {
-  point *org;
-  point *dest;
-  edge *onext;
-  edge *oprev;
-  edge *dnext;
-  edge *dprev;
+    point *org;
+    point *dest;
+    edge *onext;
+    edge *oprev;
+    edge *dnext;
+    edge *dprev;
 };

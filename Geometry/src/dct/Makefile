@@ -15,20 +15,14 @@ INCS 	=\
 SRC 	=\
 	dc.c\
 	edge.c\
-	error.c\
 	i_o.c\
-	main.c\
-	memory.c\
 	drawlines.c
 
 
 OBJS 	=\
 	dc.o\
 	edge.o\
-	error.o\
 	i_o.o\
-	main.o\
-	memory.o\
 	drawlines.o
 
 TEXT	= Makefile README $(INCS) $(SRC) 

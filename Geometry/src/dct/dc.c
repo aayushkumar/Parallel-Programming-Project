@@ -3,12 +3,78 @@
 #include  "decl.h"
 #include  "dc.h"
 #include  "edge.h"
+//#include  "extern.h"
+#include  "edge.h"
+#include  "draw.h"
+#include  <stdio.h>
+#include  <stdlib.h>
+
+point *p_array;
+static edge *e_array;
+static edge **free_list_e;
+static cardinal n_free_e;
 
 static void lower_tangent(edge *r_cw_l, point *s, edge *l_ccw_r, point *u,
         edge **l_lower, point **org_l_lower,
         edge **r_lower, point **org_r_lower);
 
 static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tangent);
+
+
+void alloc_memory(cardinal n)
+{
+  edge *e;
+  unsigned int i;
+
+  /* Point storage. */
+  p_array = (point *)calloc(n, sizeof(point));
+  if (p_array == NULL)
+  {
+      printf("Not enough memory\n");
+      exit(0);
+  }
+
+  /* Edges. */
+  n_free_e = 3 * n;   /* Eulers relation */
+  e_array = e = (edge *)calloc(n_free_e, sizeof(edge));
+  if (e_array == NULL)
+  {
+      printf("Not enough memory\n");
+      exit(0);
+  }
+  free_list_e = (edge **)calloc(n_free_e, sizeof(edge *));
+  if (free_list_e == NULL)
+  {
+      printf("Not enough memory\n");
+      exit(0);
+  }
+  for (i = 0; i < n_free_e; i++, e++)
+    free_list_e[i] = e;
+}
+
+void free_memory()
+{
+  free(p_array);  
+  free(e_array);  
+  free(free_list_e);  
+}
+
+edge *get_edge()
+{
+  if (n_free_e == 0)
+  {
+      printf("Out of memory for edges\n");
+      exit(0);
+  }
+
+   return (free_list_e[--n_free_e]);
+}
+
+void free_edge(edge *e)
+{
+   free_list_e[n_free_e++] = e;
+}
+
 
 void merge_sort(point *p[], point *p_temp[], unsigned int l, unsigned int r)
 {
@@ -297,4 +363,55 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
         }
 
     } while (TRUE);
+}
+
+
+int main(int argc, char *argv[])
+{
+    unsigned int n;
+    edge *l_cw, *r_ccw;
+    unsigned int i;
+    point **p_sorted, **p_temp;
+
+    n = read_points(n);
+
+    /* Initialise entry edge pointers. */
+    for (i = 0; i < n; i++)
+        p_array[i].entry_pt = NULL;
+
+    /* Sort. */
+    p_sorted = (point **)malloc((unsigned)n*sizeof(point *));
+    if (p_sorted == NULL)
+    {
+        printf("triangulate: not enough memory\n");
+        exit(0);
+    }
+    p_temp = (point **)malloc((unsigned)n*sizeof(point *));
+    if (p_temp == NULL)
+    {
+        printf("triangulate: not enough memory\n");
+        exit(0);
+    }
+    for (i = 0; i < n; i++)
+        p_sorted[i] = p_array + i;
+
+    merge_sort(p_sorted, p_temp, 0, n-1);
+
+    free((char *)p_temp);
+
+
+    /* Triangulate. */
+    divide(p_sorted, 0, n-1, &l_cw, &r_ccw);
+
+    free((char *)p_sorted);
+
+    if (argc == 2)
+        print_results(argc, argv,n, argv[1][1]);
+    else
+        print_results(argc, argv,n, 'e');
+
+    free_memory();
+
+    exit(1);
+    return 0;	/* To keep lint quiet. */
 }
