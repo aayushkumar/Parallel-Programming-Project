@@ -1,7 +1,3 @@
-#define SYSV
-#define OUTPUT
-#define TIME
-
 #define  TRUE  1
 #define  FALSE  0
 
