@@ -1,14 +1,16 @@
 CC	= cc 
-CFLAGS	= -O
+CFLAGS	= -O `pkg-config --libs --cflags gtk+-2.0`
 LDFLAGS	= -lm
 LINT	= lint
 PRINT	= ato2ps -Ple
+
 INCS 	=\
 	decl.h\
 	defs.h\
 	extern.h\
 	dc.h\
-	edge.h
+	edge.h\
+	draw.h\
 
 SRC 	=\
 	dc.c\
@@ -17,7 +19,8 @@ SRC 	=\
 	i_o.c\
 	main.c\
 	memory.c\
-	sort.c
+	sort.c\
+	drawlines.c
 
 
 OBJS 	=\
@@ -27,7 +30,8 @@ OBJS 	=\
 	i_o.o\
 	main.o\
 	memory.o\
-	sort.o
+	sort.o\
+	drawlines.o
 
 TEXT	= Makefile README $(INCS) $(SRC) 
 

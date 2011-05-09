@@ -35,7 +35,7 @@ void panic(char *m);
 
 /* i_o.c */
 void read_points(cardinal n);
-void print_results(cardinal n, char o);
+void print_results(int argc, char *argv[],cardinal n, char o);
 
 /* memory.c */
 void alloc_memory(cardinal n);
