@@ -25,6 +25,7 @@
 #include  "decl.h"
 #include  "extern.h"
 #include  "edge.h"
+#include  "draw.h"
 #include  <stdio.h>
 #include  <stdlib.h>
 
@@ -70,9 +71,9 @@ int main(int argc, char *argv[])
   free((char *)p_sorted);
 
   if (argc == 2)
-    print_results(n, argv[1][1]);
+    print_results(argc, argv,n, argv[1][1]);
   else
-    print_results(n, 'e');
+    print_results(argc, argv,n, 'e');
 
   free_memory();
 

@@ -25,9 +25,10 @@
 #include  "decl.h"
 #include  "extern.h"
 #include  "edge.h"
+#include  "draw.h"
 #include  <stdio.h>
 
-static void print_edges(cardinal n);
+static void print_edges(int argc, char *argv[],cardinal n);
 static void print_triangles(cardinal n);
 
 void read_points(cardinal np)
@@ -39,29 +40,39 @@ void read_points(cardinal np)
 	panic("Error reading points\n");
 }
 
+
 /*
  * Driver function.
  */
-void print_results(cardinal n, char o)
+void print_results(int argc, char *argv[],cardinal n, char o)
 {
   /* Output edges or triangles. */
   if (o == 't')
     print_triangles(n);
   else
-    print_edges(n);
+    print_edges(argc, argv,n);
 }
 
 /* 
  *  Print the ring of edges about each vertex.
  */
-static void print_edges(cardinal n)
+static void print_edges(int argc, char *argv[],cardinal n)
 {
   edge *e_start, *e;
   point *u, *v;
   index i;
+  Site* sites = NULL;
+  Edges* edges = NULL;
+  int numberOfEdges = 0;
+  int start=0,end=0;
+  int index=0;
+
+  sites = (Site *)malloc(sizeof(Site)*n);
 
   for (i = 0; i < n; i++) {
     u = &p_array[i];
+    sites[i].coord[0] = p_array[i].x;
+    sites[i].coord[1] = p_array[i].y;
     e_start = e = u->entry_pt;
     do
     {
@@ -69,9 +80,43 @@ static void print_edges(cardinal n)
       if (u < v)
 	if (printf("%d %d\n", u - p_array, v - p_array) == EOF)
 	  panic("Error printing results\n");
+        else
+        numberOfEdges++;
       e = Next(e, u);
     } while (!Identical_refs(e, e_start));
   }
+
+  edges = (Edges*)malloc(sizeof(Edges)*numberOfEdges);
+
+  for (i = 0; i < n; i++) {
+    u = &p_array[i];
+    sites[i].coord[0] = p_array[i].x;
+    sites[i].coord[1] = p_array[i].y;
+    e_start = e = u->entry_pt;
+    do
+    {
+      v = Other_point(e, u);
+      if (u < v)
+	if (printf("%d %d\n", u - p_array, v - p_array) == EOF)
+	  panic("Error printing results\n");
+        else
+         {
+	     start =  u - p_array;
+	     end =  v - p_array;
+	
+	     edges[index].orig[0] = p_array[start].x;
+	     edges[index].orig[1] = p_array[start].y;
+	     edges[index].dest[0] = p_array[end].x;
+	     edges[index].dest[1] = p_array[end].y;
+	     index++;
+         }
+        
+      e = Next(e, u);
+    } while (!Identical_refs(e, e_start));
+  }
+
+  printf("number of edges %d\n",numberOfEdges);
+  drawVoronoi(argc, argv,edges,sites,numberOfEdges,n);
 }
 
 /* 
