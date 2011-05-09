@@ -16,32 +16,42 @@ on_expose_event(GtkWidget *widget,
   //printf("number of edges %d\n",numEdges);
   //printf("coming to dd for %d %f %f %f %f edges\n",numEdges,gedges[i].orig[0], gedges[i].orig[1],gedges[i].dest[0], gedges[i].dest[1]);
  
- float delta=2.225;
-
-  cairo_set_source_rgb(cr,0.8, 0.3, 0.0);
  
-  for(i=0; i<numSites; i++) 
-  {
-     //cairo_translate(cr,gsites[i].coord[0], gsites[i].coord[1]);
-     //cairo_move_to(cr, gedges[i].orig[0], gedges[i].orig[1]);
-     cairo_move_to(cr, gsites[i].coord[0], gsites[i].coord[1]);
-     //cairo_arc(cr,gsites[i].coord[0], gsites[i].coord[1], 1, 0, 2*3.14);
-     //cairo_stroke_preserve(cr);
-
-     cairo_line_to(cr, gsites[i].coord[0]-delta, gsites[i].coord[1]-delta);
-  }
   
-  cairo_set_source_rgb(cr, 0, 0, 0);
+  cairo_set_source_rgb(cr, 0.3, 0.7, 0.6);
   cairo_set_line_width (cr, 2.5);
  
-  for(i=0; i<numEdges; i++) {
+  for(i=0; i<numEdges; i++) 
   {
      cairo_move_to(cr, gedges[i].orig[0], gedges[i].orig[1]);
      cairo_line_to(cr, gedges[i].dest[0], gedges[i].dest[1]);
     //	 printf("coming to dd for %d %f %f %f %f edges\n",numEdges,gedges[i].orig[0], gedges[i].orig[1],gedges[i].dest[0], gedges[i].dest[1]);
   }
-}
 
+  cairo_stroke(cr);
+
+ float delta=5.0;
+
+  cairo_set_source_rgb(cr,0.7, 0.1, 0.0);
+ 
+  for(i=0; i<numSites; i++) 
+  {
+     //cairo_translate(cr,gsites[i].coord[0], gsites[i].coord[1]);
+     //cairo_move_to(cr, gedges[i].orig[0], gedges[i].orig[1]);
+     //cairo_arc(cr,gsites[i].coord[0], gsites[i].coord[1], 1, 0, 2*3.14);
+     //cairo_stroke_preserve(cr);
+     cairo_move_to(cr, gsites[i].coord[0], gsites[i].coord[1]);
+     cairo_line_to(cr, gsites[i].coord[0]-delta, gsites[i].coord[1]);
+     
+     cairo_move_to(cr, gsites[i].coord[0]-delta, gsites[i].coord[1]);
+     cairo_line_to(cr, gsites[i].coord[0]-delta, gsites[i].coord[1]-delta);
+     
+     cairo_move_to(cr, gsites[i].coord[0]-delta, gsites[i].coord[1]-delta);
+     cairo_line_to(cr, gsites[i].coord[0], gsites[i].coord[1]-delta);
+     
+     cairo_move_to(cr, gsites[i].coord[0], gsites[i].coord[1]-delta);
+     cairo_line_to(cr, gsites[i].coord[0], gsites[i].coord[1]);
+  }
   cairo_stroke(cr);
   cairo_destroy(cr);
 
