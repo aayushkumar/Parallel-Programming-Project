@@ -160,7 +160,16 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
         Vector(dest_r_cand, org_base, u_r_c_o_b, v_r_c_o_b);
         Vector(dest_r_cand, dest_base, u_r_c_d_b, v_r_c_d_b);
 
-        /* Above tests. */
+        /* 
+         * Here, we are trying to figure out if the point in the destination
+         * of the left candidate(and dest of right candidate) is above or 
+         * below the base tangent.
+         * We create a vector from the candidate point to the origin of the
+         * base and another vector from the candidate point to the dest of
+         * the base.  We take the cross-products of these two vectors.  
+         * If the candidate point is above the base then the cross-product
+         * will be positive else it will be negative
+         */
         c_p_l_cand = Cross_product_2v(vec_x_lc_orig_base, vec_y_lc_orig_base, vec_x_lc_dest_base, vec_y_lc_dest_base);
         c_p_r_cand = Cross_product_2v(u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b);
         above_l_cand = c_p_l_cand > 0.0;
