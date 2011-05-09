@@ -15,7 +15,6 @@ typedef enum {right, left} side;
 typedef  unsigned int index;
 typedef  unsigned int cardinal;
 typedef  float  ordinate;
-typedef  unsigned char boolean;
 typedef  struct   point   point;
 typedef  struct  edge  edge;
 

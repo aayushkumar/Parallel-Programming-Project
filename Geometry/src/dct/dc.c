@@ -81,7 +81,7 @@ static void lower_tangent(edge *r_cw_l, point *s, edge *l_ccw_r, point *u,
 {
   edge *l, *r;
   point *o_l, *o_r, *d_l, *d_r;
-  boolean finished;
+  int finished;
 
   l = r_cw_l;
   r = l_ccw_r;
@@ -131,7 +131,7 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
   float u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b;
   float c_p_l_cand, c_p_r_cand;
   float d_p_l_cand, d_p_r_cand;
-  boolean above_l_cand, above_r_cand, above_next, above_prev;
+  int above_l_cand, above_r_cand, above_next, above_prev;
   point *dest_l_cand, *dest_r_cand;
   float cot_l_cand, cot_r_cand;
   edge *l_lower, *r_lower;
