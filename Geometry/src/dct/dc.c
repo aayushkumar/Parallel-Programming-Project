@@ -1,4 +1,3 @@
-
 #include  <stddef.h>
 #include  "defs.h"
 #include  "decl.h"
@@ -6,117 +5,117 @@
 #include  "edge.h"
 
 static void lower_tangent(edge *r_cw_l, point *s, edge *l_ccw_r, point *u,
-			  edge **l_lower, point **org_l_lower,
-			  edge **r_lower, point **org_r_lower);
+        edge **l_lower, point **org_l_lower,
+        edge **r_lower, point **org_r_lower);
 
 static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tangent);
 
 void divide(point *p_sorted[], index l, index r, edge **l_ccw, edge **r_cw)
 {
-  cardinal n;
-  index split;
-  edge *l_ccw_l, *r_cw_l, *l_ccw_r, *r_cw_r, *l_tangent;
-  edge *a, *b, *c;
-  float c_p;
-  
-  n = r - l + 1;
-  if (n == 2) {
+    cardinal n;
+    index split;
+    edge *l_ccw_l, *r_cw_l, *l_ccw_r, *r_cw_r, *l_tangent;
+    edge *a, *b, *c;
+    float c_p;
+
+    n = r - l + 1;
     /* Bottom of the recursion. Make an edge */
-    *l_ccw = *r_cw = make_edge(p_sorted[l], p_sorted[r]);
-  } else if (n == 3) {
-    /* Bottom of the recursion. Make a triangle or two edges */
-    a = make_edge(p_sorted[l], p_sorted[l+1]);
-    b = make_edge(p_sorted[l+1], p_sorted[r]);
-    splice(a, b, p_sorted[l+1]);
-    c_p = Cross_product_3p(p_sorted[l], p_sorted[l+1], p_sorted[r]);
-    
-    if (c_p > 0.0)
-    {
-      /* Make a triangle */
-      c = join(a, p_sorted[l], b, p_sorted[r], right);
-      *l_ccw = a;
-      *r_cw = b;
-    } else if (c_p < 0.0) {
-      /* Make a triangle */
-      c = join(a, p_sorted[l], b, p_sorted[r], left);
-      *l_ccw = c;
-      *r_cw = c;
-    } else {
-      /* Points are collinear,  no triangle */ 
-      *l_ccw = a;
-      *r_cw = b;
+    if (n == 2) {
+        *l_ccw = *r_cw = make_edge(p_sorted[l], p_sorted[r]);
+    } else if (n == 3) {
+        /* Bottom of the recursion. Make a triangle or two edges */
+        a = make_edge(p_sorted[l], p_sorted[l+1]);
+        b = make_edge(p_sorted[l+1], p_sorted[r]);
+        splice(a, b, p_sorted[l+1]);
+        c_p = Cross_product_3p(p_sorted[l], p_sorted[l+1], p_sorted[r]);
+
+        if (c_p > 0.0)
+        {
+            /* Make a triangle */
+            c = join(a, p_sorted[l], b, p_sorted[r], right);
+            *l_ccw = a;
+            *r_cw = b;
+        } else if (c_p < 0.0) {
+            /* Make a triangle */
+            c = join(a, p_sorted[l], b, p_sorted[r], left);
+            *l_ccw = c;
+            *r_cw = c;
+        } else {
+            /* Points are collinear,  no triangle */ 
+            *l_ccw = a;
+            *r_cw = b;
+        }
+    } else if (n  > 3) {
+        /* Continue to divide */
+
+        /* Calculate the split point */
+        split = (l + r) / 2;
+
+        /* Divide */
+        divide(p_sorted, l, split, &l_ccw_l, &r_cw_l);
+        divide(p_sorted, split+1, r, &l_ccw_r, &r_cw_r);
+
+        /* Merge */
+        merge(r_cw_l, p_sorted[split], l_ccw_r, p_sorted[split+1], &l_tangent);
+
+        /* The lower tangent added by merge may have invalidated 
+           l_ccw_l or r_cw_r. Update them if necessary. */
+        if (Org(l_tangent) == p_sorted[l])
+            l_ccw_l = l_tangent;
+        if (Dest(l_tangent) == p_sorted[r])
+            r_cw_r = l_tangent;
+
+        /* Update edge refs to be passed back */ 
+        *l_ccw = l_ccw_l;
+        *r_cw = r_cw_r;
     }
-  } else if (n  > 3) {
-    /* Continue to divide */
-
-    /* Calculate the split point */
-    split = (l + r) / 2;
-  
-    /* Divide */
-    divide(p_sorted, l, split, &l_ccw_l, &r_cw_l);
-    divide(p_sorted, split+1, r, &l_ccw_r, &r_cw_r);
-
-    /* Merge */
-    merge(r_cw_l, p_sorted[split], l_ccw_r, p_sorted[split+1], &l_tangent);
-
-    /* The lower tangent added by merge may have invalidated 
-       l_ccw_l or r_cw_r. Update them if necessary. */
-    if (Org(l_tangent) == p_sorted[l])
-      l_ccw_l = l_tangent;
-    if (Dest(l_tangent) == p_sorted[r])
-      r_cw_r = l_tangent;
-
-    /* Update edge refs to be passed back */ 
-    *l_ccw = l_ccw_l;
-    *r_cw = r_cw_r;
-  }
 }
 
 /*
  *  Determines the lower tangent of two triangulations. 
  */
 static void lower_tangent(edge *r_cw_l, point *s, edge *l_ccw_r, point *u,
-			  edge **l_lower, point **org_l_lower,
-			  edge **r_lower, point **org_r_lower)
+        edge **l_lower, point **org_l_lower,
+        edge **r_lower, point **org_r_lower)
 {
-  edge *l, *r;
-  point *o_l, *o_r, *d_l, *d_r;
-  int finished;
+    edge *l, *r;
+    point *o_l, *o_r, *d_l, *d_r;
+    int finished;
 
-  l = r_cw_l;
-  r = l_ccw_r;
-  o_l = s;
-  d_l = Other_point(l, s);
-  o_r = u;
-  d_r = Other_point(r, u);
-  finished = FALSE;
+    l = r_cw_l;
+    r = l_ccw_r;
+    o_l = s;
+    d_l = Other_point(l, s);
+    o_r = u;
+    d_r = Other_point(r, u);
+    finished = FALSE;
 
-  while (!finished)
-    /* 
-     * This is the case when (roughly speaking) d_l is above o_l and o_r is
-     * above d_l.  
-     */
-    if (Cross_product_3p(o_l, d_l, o_r) > 0.0) {
-      l = Prev(l, d_l);
-      o_l = d_l;
-      d_l = Other_point(l, o_l);
-    } 
+    while (!finished)
+        /* 
+         * This is the case when (roughly speaking) d_l is above o_l and o_r is
+         * above d_l.  
+         */
+        if (Cross_product_3p(o_l, d_l, o_r) > 0.0) {
+            l = Prev(l, d_l);
+            o_l = d_l;
+            d_l = Other_point(l, o_l);
+        } 
     /* 
      * This is the case when (roughly speaking) the d_r (dest of right edge)
      * is "above" o_r (origin of right edge).  If this is NOT the case then
      * we enter the if clause
      */
-    else if (Cross_product_3p(o_r, d_r, o_l) < 0.0) {
-      r = Next(r, d_r);
-      o_r = d_r;
-      d_r = Other_point(r, o_r);
-    } else
-      finished = TRUE;
+        else if (Cross_product_3p(o_r, d_r, o_l) < 0.0) {
+            r = Next(r, d_r);
+            o_r = d_r;
+            d_r = Other_point(r, o_r);
+        } else
+            finished = TRUE;
 
-  *l_lower = l;
-  *r_lower = r;
-  *org_l_lower = o_l;
-  *org_r_lower = o_r;
+        *l_lower = l;
+        *r_lower = r;
+        *org_l_lower = o_l;
+        *org_r_lower = o_r;
 }
 
 /* 
@@ -125,140 +124,140 @@ static void lower_tangent(edge *r_cw_l, point *s, edge *l_ccw_r, point *u,
  */ 
 static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tangent)
 {
-  edge *base, *l_cand, *r_cand;
-  point *org_base, *dest_base;
-  float u_l_c_o_b, v_l_c_o_b, u_l_c_d_b, v_l_c_d_b;
-  float u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b;
-  float c_p_l_cand, c_p_r_cand;
-  float d_p_l_cand, d_p_r_cand;
-  int above_l_cand, above_r_cand, above_next, above_prev;
-  point *dest_l_cand, *dest_r_cand;
-  float cot_l_cand, cot_r_cand;
-  edge *l_lower, *r_lower;
-  point *org_r_lower, *org_l_lower;
+    edge *base, *l_cand, *r_cand;
+    point *org_base, *dest_base;
+    float vec_x_lc_orig_base, vec_y_lc_orig_base, vec_x_lc_dest_base, vec_y_lc_dest_base;
+    float u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b;
+    float c_p_l_cand, c_p_r_cand;
+    float d_p_l_cand, d_p_r_cand;
+    int above_l_cand, above_r_cand, above_next, above_prev;
+    point *dest_l_cand, *dest_r_cand;
+    float cot_l_cand, cot_r_cand;
+    edge *l_lower, *r_lower;
+    point *org_r_lower, *org_l_lower;
 
-  /* Create first cross edge by joining lower common tangent */
-  lower_tangent(r_cw_l, s, l_ccw_r, u, &l_lower, &org_l_lower, &r_lower, &org_r_lower);
-  base = join(l_lower, org_l_lower, r_lower, org_r_lower, right);
-  org_base = org_l_lower;
-  dest_base = org_r_lower;
-  
-  /* Need to return lower tangent. */
-  *l_tangent = base;
+    /* Create first cross edge by joining lower common tangent */
+    lower_tangent(r_cw_l, s, l_ccw_r, u, &l_lower, &org_l_lower, &r_lower, &org_r_lower);
+    base = join(l_lower, org_l_lower, r_lower, org_r_lower, right);
+    org_base = org_l_lower;
+    dest_base = org_r_lower;
 
-  /* Main merge loop */
-  do 
-  {
-    /* Initialise l_cand and r_cand */
-    l_cand = Next(base, org_base);
-    r_cand = Prev(base, dest_base);
-    dest_l_cand = Other_point(l_cand, org_base);
-    dest_r_cand = Other_point(r_cand, dest_base);
+    /* Need to return lower tangent. */
+    *l_tangent = base;
 
-    /* Vectors for above and "in_circle" tests. */
-    Vector(dest_l_cand, org_base, u_l_c_o_b, v_l_c_o_b);
-    Vector(dest_l_cand, dest_base, u_l_c_d_b, v_l_c_d_b);
-    Vector(dest_r_cand, org_base, u_r_c_o_b, v_r_c_o_b);
-    Vector(dest_r_cand, dest_base, u_r_c_d_b, v_r_c_d_b);
-
-    /* Above tests. */
-    c_p_l_cand = Cross_product_2v(u_l_c_o_b, v_l_c_o_b, u_l_c_d_b, v_l_c_d_b);
-    c_p_r_cand = Cross_product_2v(u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b);
-    above_l_cand = c_p_l_cand > 0.0;
-    above_r_cand = c_p_r_cand > 0.0;
-    if (!above_l_cand && !above_r_cand)
-      break;        /* Finished. */
-
-    /* Advance l_cand ccw,  deleting the old l_cand edge,  until the 
-       "in_circle" test fails. */
-    if (above_l_cand)
+    /* Main merge loop */
+    do 
     {
-      float u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b;
-      float c_p_next, d_p_next, cot_next;
-      edge *next;
-      point *dest_next;
+        /* Initialise l_cand and r_cand */
+        l_cand = Next(base, org_base);
+        r_cand = Prev(base, dest_base);
+        dest_l_cand = Other_point(l_cand, org_base);
+        dest_r_cand = Other_point(r_cand, dest_base);
 
-      d_p_l_cand = Dot_product_2v(u_l_c_o_b, v_l_c_o_b, u_l_c_d_b, v_l_c_d_b);
-      cot_l_cand = d_p_l_cand / c_p_l_cand;
+        /* Vectors for above and "in_circle" tests. */
+        Vector(dest_l_cand, org_base, vec_x_lc_orig_base, vec_y_lc_orig_base);
+        Vector(dest_l_cand, dest_base, vec_x_lc_dest_base, vec_y_lc_dest_base);
+        Vector(dest_r_cand, org_base, u_r_c_o_b, v_r_c_o_b);
+        Vector(dest_r_cand, dest_base, u_r_c_d_b, v_r_c_d_b);
 
-      do 
-      {
-        next = Next(l_cand, org_base);
-        dest_next = Other_point(next, org_base);
-        Vector(dest_next, org_base, u_n_o_b, v_n_o_b);
-        Vector(dest_next, dest_base, u_n_d_b, v_n_d_b);
-        c_p_next = Cross_product_2v(u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b);
-        above_next = c_p_next > 0.0;
+        /* Above tests. */
+        c_p_l_cand = Cross_product_2v(vec_x_lc_orig_base, vec_y_lc_orig_base, vec_x_lc_dest_base, vec_y_lc_dest_base);
+        c_p_r_cand = Cross_product_2v(u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b);
+        above_l_cand = c_p_l_cand > 0.0;
+        above_r_cand = c_p_r_cand > 0.0;
+        if (!above_l_cand && !above_r_cand)
+            break;        /* Finished. */
 
-        if (!above_next) 
-          break;    /* Finished. */
+        /* Advance l_cand ccw,  deleting the old l_cand edge,  until the 
+           "in_circle" test fails. */
+        if (above_l_cand)
+        {
+            float u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b;
+            float c_p_next, d_p_next, cot_next;
+            edge *next;
+            point *dest_next;
 
-        d_p_next = Dot_product_2v(u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b);
-        cot_next = d_p_next / c_p_next;
+            d_p_l_cand = Dot_product_2v(vec_x_lc_orig_base, vec_y_lc_orig_base, vec_x_lc_dest_base, vec_y_lc_dest_base);
+            cot_l_cand = d_p_l_cand / c_p_l_cand;
 
-        if (cot_next > cot_l_cand)
-          break;    /* Finished. */
+            do 
+            {
+                next = Next(l_cand, org_base);
+                dest_next = Other_point(next, org_base);
+                Vector(dest_next, org_base, u_n_o_b, v_n_o_b);
+                Vector(dest_next, dest_base, u_n_d_b, v_n_d_b);
+                c_p_next = Cross_product_2v(u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b);
+                above_next = c_p_next > 0.0;
 
-        delete_edge(l_cand);
-        l_cand = next;
-        cot_l_cand = cot_next;
-  
-      } while (TRUE);
-    }
+                if (!above_next) 
+                    break;    /* Finished. */
 
-    /* Now do the symmetrical for r_cand */
-    if (above_r_cand)
-    {
-      float u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b;
-      float c_p_prev, d_p_prev, cot_prev;
-      edge *prev;
-      point *dest_prev;
+                d_p_next = Dot_product_2v(u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b);
+                cot_next = d_p_next / c_p_next;
 
-      d_p_r_cand = Dot_product_2v(u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b);
-      cot_r_cand = d_p_r_cand / c_p_r_cand;
+                if (cot_next > cot_l_cand)
+                    break;    /* Finished. */
 
-      do
-      {
-        prev = Prev(r_cand, dest_base);
-        dest_prev = Other_point(prev, dest_base);
-        Vector(dest_prev, org_base, u_p_o_b, v_p_o_b);
-        Vector(dest_prev, dest_base, u_p_d_b, v_p_d_b);
-        c_p_prev = Cross_product_2v(u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b);
-        above_prev = c_p_prev > 0.0;
+                delete_edge(l_cand);
+                l_cand = next;
+                cot_l_cand = cot_next;
 
-        if (!above_prev) 
-          break;    /* Finished. */
+            } while (TRUE);
+        }
 
-        d_p_prev = Dot_product_2v(u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b);
-        cot_prev = d_p_prev / c_p_prev;
+        /* Now do the symmetrical for r_cand */
+        if (above_r_cand)
+        {
+            float u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b;
+            float c_p_prev, d_p_prev, cot_prev;
+            edge *prev;
+            point *dest_prev;
 
-        if (cot_prev > cot_r_cand)
-          break;    /* Finished. */
+            d_p_r_cand = Dot_product_2v(u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b);
+            cot_r_cand = d_p_r_cand / c_p_r_cand;
 
-        delete_edge(r_cand);
-        r_cand = prev;
-        cot_r_cand = cot_prev;
+            do
+            {
+                prev = Prev(r_cand, dest_base);
+                dest_prev = Other_point(prev, dest_base);
+                Vector(dest_prev, org_base, u_p_o_b, v_p_o_b);
+                Vector(dest_prev, dest_base, u_p_d_b, v_p_d_b);
+                c_p_prev = Cross_product_2v(u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b);
+                above_prev = c_p_prev > 0.0;
 
-      } while (TRUE);
-    }
+                if (!above_prev) 
+                    break;    /* Finished. */
 
-    /*
-     *  Now add a cross edge from base to either l_cand or r_cand. 
-     *  If both are valid choose on the basis of the in_circle test . 
-     *  Advance base and  whichever candidate was chosen.
-     */
-    dest_l_cand = Other_point(l_cand, org_base);
-    dest_r_cand = Other_point(r_cand, dest_base);
-    if (!above_l_cand || (above_l_cand && above_r_cand && cot_r_cand < cot_l_cand))
-    {
-      /* Connect to the right */
-      base = join(base, org_base, r_cand, dest_r_cand, right);
-      dest_base = dest_r_cand;
-    } else {
-      /* Connect to the left */
-      base = join(l_cand, dest_l_cand, base, dest_base, right);
-      org_base = dest_l_cand;
-    }
+                d_p_prev = Dot_product_2v(u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b);
+                cot_prev = d_p_prev / c_p_prev;
 
-  } while (TRUE);
+                if (cot_prev > cot_r_cand)
+                    break;    /* Finished. */
+
+                delete_edge(r_cand);
+                r_cand = prev;
+                cot_r_cand = cot_prev;
+
+            } while (TRUE);
+        }
+
+        /*
+         *  Now add a cross edge from base to either l_cand or r_cand. 
+         *  If both are valid choose on the basis of the in_circle test . 
+         *  Advance base and  whichever candidate was chosen.
+         */
+        dest_l_cand = Other_point(l_cand, org_base);
+        dest_r_cand = Other_point(r_cand, dest_base);
+        if (!above_l_cand || (above_l_cand && above_r_cand && cot_r_cand < cot_l_cand))
+        {
+            /* Connect to the right */
+            base = join(base, org_base, r_cand, dest_r_cand, right);
+            dest_base = dest_r_cand;
+        } else {
+            /* Connect to the left */
+            base = join(l_cand, dest_l_cand, base, dest_base, right);
+            org_base = dest_l_cand;
+        }
+
+    } while (TRUE);
 }
