@@ -10,10 +10,38 @@ static void lower_tangent(edge *r_cw_l, point *s, edge *l_ccw_r, point *u,
 
 static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tangent);
 
-void divide(point *p_sorted[], index l, index r, edge **l_ccw, edge **r_cw)
+void merge_sort(point *p[], point *p_temp[], unsigned int l, unsigned int r)
+{
+  unsigned int i, j, k, m;
+
+  if (r - l > 0)
+  {
+    m = (r + l) / 2;
+    merge_sort(p, p_temp, l, m);
+    merge_sort(p, p_temp, m+1, r);
+
+    for (i = m+1; i > l; i--)
+      p_temp[i-1] = p[i-1];
+    for (j = m; j < r; j++)
+      p_temp[r+m-j] = p[j+1];
+    for (k = l; k <= r; k++)
+      if (p_temp[i]->x < p_temp[j]->x) {
+        p[k] = p_temp[i];
+        i = i + 1;
+      } else if (p_temp[i]->x == p_temp[j]->x && p_temp[i]->y < p_temp[j]->y) {
+        p[k] = p_temp[i];
+        i = i + 1;
+      } else {
+        p[k] = p_temp[j];
+        j = j - 1;
+      }
+  }
+}
+
+void divide(point *p_sorted[], unsigned int l, unsigned int r, edge **l_ccw, edge **r_cw)
 {
     cardinal n;
-    index split;
+    unsigned int split;
     edge *l_ccw_l, *r_cw_l, *l_ccw_r, *r_cw_r, *l_tangent;
     edge *a, *b, *c;
     float c_p;

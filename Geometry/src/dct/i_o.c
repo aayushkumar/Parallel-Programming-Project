@@ -1,39 +1,17 @@
-/*   Author: Geoff Leach, Department of Computer Science, RMIT.
- *   email: gl@cs.rmit.edu.au
- *
- *   Date: 6/10/93
- *
- *   Version 1.0
- *   
- *   Copyright (c) RMIT 1993. All rights reserved.
- *
- *   License to copy and use this software purposes is granted provided 
- *   that appropriate credit is given to both RMIT and the author.
- *
- *   License is also granted to make and use derivative works provided
- *   that appropriate credit is given to both RMIT and the author.
- *
- *   RMIT makes no representations concerning either the merchantability 
- *   of this software or the suitability of this software for any particular 
- *   purpose.  It is provided "as is" without express or implied warranty 
- *   of any kind.
- *
- *   These notices must be retained in any copies of any part of this software.
- */
-
 #include  "defs.h"
 #include  "decl.h"
 #include  "extern.h"
 #include  "edge.h"
 #include  "draw.h"
 #include  <stdio.h>
+#include <stdlib.h>
 
 static void print_edges(int argc, char *argv[],cardinal n);
 static void print_triangles(cardinal n);
 /*
 void read_points(cardinal np)
 {
-  index i;
+  unsigned int i;
 
   for (i = 0; i < np; i++)
     if (scanf("%f %f", &p_array[i].x, &p_array[i].y) != 2)
@@ -42,7 +20,7 @@ void read_points(cardinal np)
 
 int read_points(int np)
 {
-  index i;
+  unsigned int i;
   FILE* fp;
   int code=0;
   int n;
@@ -78,7 +56,7 @@ static void print_edges(int argc, char *argv[],cardinal n)
 {
   edge *e_start, *e;
   point *u, *v;
-  index i;
+  unsigned int i;
   Site* sites = NULL;
   Edges* edges = NULL;
   int numberOfEdges = 0;
@@ -144,7 +122,7 @@ static void print_triangles(cardinal n)
 {
   edge *e_start, *e, *next;
   point *u, *v, *w;
-  index i;
+  unsigned int i;
   point *t;
 
   for (i = 0; i < n; i++) {

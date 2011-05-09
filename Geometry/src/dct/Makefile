@@ -19,7 +19,6 @@ SRC 	=\
 	i_o.c\
 	main.c\
 	memory.c\
-	sort.c\
 	drawlines.c
 
 
@@ -30,7 +29,6 @@ OBJS 	=\
 	i_o.o\
 	main.o\
 	memory.o\
-	sort.o\
 	drawlines.o
 
 TEXT	= Makefile README $(INCS) $(SRC) 

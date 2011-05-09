@@ -10,7 +10,7 @@ static cardinal n_free_e;
 void alloc_memory(cardinal n)
 {
   edge *e;
-  index i;
+  unsigned int i;
 
   /* Point storage. */
   p_array = (point *)calloc(n, sizeof(point));
