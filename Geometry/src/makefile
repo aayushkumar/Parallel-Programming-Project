@@ -38,6 +38,6 @@ clean:
 	rm -rf *.o
 
 #final command  "cc -fopenmp  driver.c -L. -lpsearch -o test"
-
+#gcc -o lines lines.c `pkg-config --libs --cflags gtk+-2.0`
 
 
