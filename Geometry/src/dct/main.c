@@ -31,20 +31,25 @@
 
 int main(int argc, char *argv[])
 {
-  cardinal n;
+  //cardinal n;
+  int n;
   edge *l_cw, *r_ccw;
   index i;
   point **p_sorted, **p_temp;
 
-  if (scanf("%d", &n) != 1)
-    panic("Problem reading number of points on first line\n");
-
+ if(scanf("%d", &n) != 1)
+   panic("Problem reading number of points on first line\n");
+ 
   if (n <= 0)
     panic("Number of points has to be greater than 0\n");
+  else
+   printf("Number of sites are %d\n",n);
 
-  alloc_memory(n);
+  n = read_points(n);
+   
+  //alloc_memory(n);
 
-  read_points(n);
+  //read_points(n);
 
   /* Initialise entry edge pointers. */
   for (i = 0; i < n; i++)

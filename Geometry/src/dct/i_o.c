@@ -30,7 +30,7 @@
 
 static void print_edges(int argc, char *argv[],cardinal n);
 static void print_triangles(cardinal n);
-
+/*
 void read_points(cardinal np)
 {
   index i;
@@ -38,6 +38,24 @@ void read_points(cardinal np)
   for (i = 0; i < np; i++)
     if (scanf("%f %f", &p_array[i].x, &p_array[i].y) != 2)
 	panic("Error reading points\n");
+}*/
+
+int read_points(int np)
+{
+  index i;
+  FILE* fp;
+  int code=0;
+  int n;
+   
+  fp = fopen("input.txt","r");
+  code=fscanf(fp,"%d",&n);
+  printf("%d\n",n);
+  alloc_memory(n);
+  for (i = 0; i < n; i++)
+  code=fscanf(fp,"%f %f", &p_array[i].x, &p_array[i].y);
+
+  fclose(fp);
+  return n;
 }
 
 

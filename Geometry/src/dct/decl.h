@@ -1,3 +1,26 @@
+/*   Author: Geoff Leach, Department of Computer Science, RMIT.
+ *   email: gl@cs.rmit.edu.au
+ *
+ *   Date: 6/10/93
+ *
+ *   Version 1.0
+ *   
+ *   Copyright (c) RMIT 1993. All rights reserved.
+ *
+ *   License to copy and use this software purposes is granted provided 
+ *   that appropriate credit is given to both RMIT and the author.
+ *
+ *   License is also granted to make and use derivative works provided
+ *   that appropriate credit is given to both RMIT and the author.
+ *
+ *   RMIT makes no representations concerning either the merchantability 
+ *   of this software or the suitability of this software for any particular 
+ *   purpose.  It is provided "as is" without express or implied warranty 
+ *   of any kind.
+ *
+ *   These notices must be retained in any copies of any part of this software.
+ */
+
 /* divide_and_conquer.c */
 void divide(point *p_sorted[], index l, index r, edge **l_ccw, edge **r_cw);
 
@@ -11,7 +34,7 @@ edge *make_edge(point *u, point *v);
 void panic(char *m);
 
 /* i_o.c */
-void read_points(cardinal n);
+int read_points(int n);
 void print_results(int argc, char *argv[],cardinal n, char o);
 
 /* memory.c */

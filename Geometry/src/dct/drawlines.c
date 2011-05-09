@@ -18,8 +18,8 @@ on_expose_event(GtkWidget *widget,
  
  float delta=2.225;
 
-  cairo_set_source_rgb(cr,0.7, 0.2, 0.0);
-
+  cairo_set_source_rgb(cr,0.8, 0.3, 0.0);
+ 
   for(i=0; i<numSites; i++) 
   {
      //cairo_translate(cr,gsites[i].coord[0], gsites[i].coord[1]);
@@ -30,7 +30,7 @@ on_expose_event(GtkWidget *widget,
 
      cairo_line_to(cr, gsites[i].coord[0]-delta, gsites[i].coord[1]-delta);
   }
-
+  
   cairo_set_source_rgb(cr, 0, 0, 0);
   cairo_set_line_width (cr, 2.5);
  
