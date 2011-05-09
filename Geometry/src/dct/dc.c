@@ -17,7 +17,7 @@ void divide(point *p_sorted[], index l, index r, edge **l_ccw, edge **r_cw)
   index split;
   edge *l_ccw_l, *r_cw_l, *l_ccw_r, *r_cw_r, *l_tangent;
   edge *a, *b, *c;
-  real c_p;
+  float c_p;
   
   n = r - l + 1;
   if (n == 2) {
@@ -127,13 +127,13 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
 {
   edge *base, *l_cand, *r_cand;
   point *org_base, *dest_base;
-  real u_l_c_o_b, v_l_c_o_b, u_l_c_d_b, v_l_c_d_b;
-  real u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b;
-  real c_p_l_cand, c_p_r_cand;
-  real d_p_l_cand, d_p_r_cand;
+  float u_l_c_o_b, v_l_c_o_b, u_l_c_d_b, v_l_c_d_b;
+  float u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b;
+  float c_p_l_cand, c_p_r_cand;
+  float d_p_l_cand, d_p_r_cand;
   boolean above_l_cand, above_r_cand, above_next, above_prev;
   point *dest_l_cand, *dest_r_cand;
-  real cot_l_cand, cot_r_cand;
+  float cot_l_cand, cot_r_cand;
   edge *l_lower, *r_lower;
   point *org_r_lower, *org_l_lower;
 
@@ -173,8 +173,8 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
        "in_circle" test fails. */
     if (above_l_cand)
     {
-      real u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b;
-      real c_p_next, d_p_next, cot_next;
+      float u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b;
+      float c_p_next, d_p_next, cot_next;
       edge *next;
       point *dest_next;
 
@@ -209,8 +209,8 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
     /* Now do the symmetrical for r_cand */
     if (above_r_cand)
     {
-      real u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b;
-      real c_p_prev, d_p_prev, cot_prev;
+      float u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b;
+      float c_p_prev, d_p_prev, cot_prev;
       edge *prev;
       point *dest_prev;
 

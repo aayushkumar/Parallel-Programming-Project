@@ -14,8 +14,6 @@ typedef enum {right, left} side;
 /* Geometric and topological entities. */
 typedef  unsigned int index;
 typedef  unsigned int cardinal;
-typedef  int integer;
-typedef  float  real;
 typedef  float  ordinate;
 typedef  unsigned char boolean;
 typedef  struct   point   point;
