@@ -1,25 +1,3 @@
-/*   Author: Geoff Leach, Department of Computer Science, RMIT.
- *   email: gl@cs.rmit.edu.au
- *
- *   Date: 6/10/93
- *
- *   Version 1.0
- *   
- *   Copyright (c) RMIT 1993. All rights reserved.
- *
- *   License to copy and use this software purposes is granted provided 
- *   that appropriate credit is given to both RMIT and the author.
- *
- *   License is also granted to make and use derivative works provided
- *   that appropriate credit is given to both RMIT and the author.
- *
- *   RMIT makes no representations concerning either the merchantability 
- *   of this software or the suitability of this software for any particular 
- *   purpose.  It is provided "as is" without express or implied warranty 
- *   of any kind.
- *
- *   These notices must be retained in any copies of any part of this software.
- */
 
 #include  <stddef.h>
 #include  "defs.h"
@@ -39,7 +17,7 @@ void divide(point *p_sorted[], index l, index r, edge **l_ccw, edge **r_cw)
   index split;
   edge *l_ccw_l, *r_cw_l, *l_ccw_r, *r_cw_r, *l_tangent;
   edge *a, *b, *c;
-  real c_p;
+  float c_p;
   
   n = r - l + 1;
   if (n == 2) {
@@ -103,7 +81,7 @@ static void lower_tangent(edge *r_cw_l, point *s, edge *l_ccw_r, point *u,
 {
   edge *l, *r;
   point *o_l, *o_r, *d_l, *d_r;
-  boolean finished;
+  int finished;
 
   l = r_cw_l;
   r = l_ccw_r;
@@ -116,14 +94,15 @@ static void lower_tangent(edge *r_cw_l, point *s, edge *l_ccw_r, point *u,
   while (!finished)
     /* 
      * This is the case when (roughly speaking) d_l is above o_l and o_r is
-     * above d_l
+     * above d_l.  
      */
     if (Cross_product_3p(o_l, d_l, o_r) > 0.0) {
       l = Prev(l, d_l);
       o_l = d_l;
       d_l = Other_point(l, o_l);
     } 
-    /* This is the case when (roughly speaking) the d_r (dest of right edge)
+    /* 
+     * This is the case when (roughly speaking) the d_r (dest of right edge)
      * is "above" o_r (origin of right edge).  If this is NOT the case then
      * we enter the if clause
      */
@@ -148,13 +127,13 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
 {
   edge *base, *l_cand, *r_cand;
   point *org_base, *dest_base;
-  real u_l_c_o_b, v_l_c_o_b, u_l_c_d_b, v_l_c_d_b;
-  real u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b;
-  real c_p_l_cand, c_p_r_cand;
-  real d_p_l_cand, d_p_r_cand;
-  boolean above_l_cand, above_r_cand, above_next, above_prev;
+  float u_l_c_o_b, v_l_c_o_b, u_l_c_d_b, v_l_c_d_b;
+  float u_r_c_o_b, v_r_c_o_b, u_r_c_d_b, v_r_c_d_b;
+  float c_p_l_cand, c_p_r_cand;
+  float d_p_l_cand, d_p_r_cand;
+  int above_l_cand, above_r_cand, above_next, above_prev;
   point *dest_l_cand, *dest_r_cand;
-  real cot_l_cand, cot_r_cand;
+  float cot_l_cand, cot_r_cand;
   edge *l_lower, *r_lower;
   point *org_r_lower, *org_l_lower;
 
@@ -194,8 +173,8 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
        "in_circle" test fails. */
     if (above_l_cand)
     {
-      real u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b;
-      real c_p_next, d_p_next, cot_next;
+      float u_n_o_b, v_n_o_b, u_n_d_b, v_n_d_b;
+      float c_p_next, d_p_next, cot_next;
       edge *next;
       point *dest_next;
 
@@ -230,8 +209,8 @@ static void merge(edge *r_cw_l, point *s, edge *l_ccw_r, point *u, edge **l_tang
     /* Now do the symmetrical for r_cand */
     if (above_r_cand)
     {
-      real u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b;
-      real c_p_prev, d_p_prev, cot_prev;
+      float u_p_o_b, v_p_o_b, u_p_d_b, v_p_d_b;
+      float c_p_prev, d_p_prev, cot_prev;
       edge *prev;
       point *dest_prev;
 
