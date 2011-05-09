@@ -1,13 +1,10 @@
-CC	= cc 
+CC	= gcc 
 CFLAGS	= -O `pkg-config --libs --cflags gtk+-2.0`
 LDFLAGS	= -lm
 LINT	= lint
 PRINT	= ato2ps -Ple
 
 INCS 	=\
-	decl.h\
-	defs.h\
-	extern.h\
 	dc.h\
 	edge.h\
 	draw.h\
@@ -15,14 +12,12 @@ INCS 	=\
 SRC 	=\
 	dc.c\
 	edge.c\
-	i_o.c\
 	drawlines.c
 
 
 OBJS 	=\
 	dc.o\
 	edge.o\
-	i_o.o\
 	drawlines.o
 
 TEXT	= Makefile README $(INCS) $(SRC) 
@@ -40,8 +35,6 @@ tar	:
 	tar cvf dct.tar $(TEXT)
 
 DINCS	=\
-	defs.h\
-	decl.h
 
 $(OBJS) 	: $(DINCS)
 

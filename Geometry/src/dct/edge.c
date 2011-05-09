@@ -1,7 +1,4 @@
-#include  "defs.h"
-#include  "decl.h"
 #include  "edge.h"
-#include  "extern.h"
 #include <stdlib.h>
 
 /* 
